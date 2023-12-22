@@ -1,5 +1,6 @@
 {
   "name": "@ohif/app",
+  "PROXY_DOMAIN": "http://192.168.99.100:8042",
   "version": "3.7.0",
   "productVersion": "3.4.0",
   "description": "OHIF Viewer",

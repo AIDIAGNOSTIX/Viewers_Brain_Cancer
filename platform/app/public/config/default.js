@@ -36,6 +36,7 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb',
       configuration: {
+        dicomUploadEnabled: true,
         friendlyName: 'AWS S3 Static wado server',
         name: 'aws',
         wadoUriRoot: 'https://d33do7qe4w26qo.cloudfront.net/dicomweb',
@@ -63,6 +64,7 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb2',
       configuration: {
+        dicomUploadEnabled: true,
         friendlyName: 'AWS S3 Static wado secondary server',
         name: 'aws',
         wadoUriRoot: 'https://d28o5kq0jsoob5.cloudfront.net/dicomweb',
@@ -91,6 +93,7 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomwebproxy',
       sourceName: 'dicomwebproxy',
       configuration: {
+        dicomUploadEnabled: true,
         friendlyName: 'dicomweb delegating proxy',
         name: 'dicomwebproxy',
       },
@@ -99,6 +102,7 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomjson',
       sourceName: 'dicomjson',
       configuration: {
+        dicomUploadEnabled: true,
         friendlyName: 'dicom json',
         name: 'json',
       },
@@ -107,6 +111,7 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomlocal',
       sourceName: 'dicomlocal',
       configuration: {
+        dicomUploadEnabled: true,
         friendlyName: 'dicom local',
       },
     },
