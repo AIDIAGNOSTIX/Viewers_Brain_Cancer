@@ -23,6 +23,7 @@ window.config = {
         imageRendering: 'wadors',
         thumbnailRendering: 'wadors',
         omitQuotationForMultipartRequest: true,
+        dicomUploadEnabled: true,
       },
     },
     {

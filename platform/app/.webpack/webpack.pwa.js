@@ -137,11 +137,15 @@ module.exports = (env, argv) => {
     ],
     // https://webpack.js.org/configuration/dev-server/
     devServer: {
+      // headers: {
+      //   "Cross-Origin-Opener-Policy": "same-origin",
+      //   "Cross-Origin-Embedder-Policy": "require-corp"
+      // },
       // gzip compression of everything served
       // Causes Cypress: `wait-on` issue in CI
       // compress: true,
       // http2: true,
-      // https: true,
+      https: true,
       open: true,
       port: 3000,
       client: {

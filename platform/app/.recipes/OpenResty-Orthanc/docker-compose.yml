@@ -23,12 +23,24 @@ services:
       # Let's Encrypt
       # - letsencrypt_certificates:/etc/letsencrypt
       # - letsencrypt_challenges:/var/www/letsencrypt
+      - /etc/ssl/nginx-selfsigned.crt:/etc/ssl/nginx-selfsigned.crt:ro
+      - /etc/ssl/nginx-selfsigned.key:/etc/ssl/nginx-selfsigned.key:ro
     ports:
       - '443:443' # SSL
       - '80:80' # Web
     depends_on:
       - orthanc
     restart: on-failure
+  
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - /mnt/sda/freelance_project_girgis/Visualization/Viewers_Brain_Cancer/platform/app/.recipes/OpenResty-Orthanc/nginx-selfsigned.crt:/etc/ssl/nginx-selfsigned.crt
+      - /mnt/sda/freelance_project_girgis/Visualization/Viewers_Brain_Cancer/platform/app/.recipes/OpenResty-Orthanc/nginx-selfsigned.key:/etc/ssl/nginx-selfsigned.key
+    depends_on:
+      - ohif_viewer
 
   # LINK: https://hub.docker.com/r/jodogne/orthanc-plugins/
   # TODO: Update to use Postgres

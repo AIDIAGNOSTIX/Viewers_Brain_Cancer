@@ -1,5 +1,5 @@
 {
-  "Name": "Orthanc inside Docker",
+  "Name": "Orthanc Database",
   "StorageDirectory": "/var/lib/orthanc/db",
   "IndexDirectory": "/var/lib/orthanc/db",
   "StorageCompression": false,
