@@ -2,7 +2,6 @@ import requests
 import numpy as np
 import pydicom
 import os, sys
-# from your_pytorch_inference_module import perform_segmentation  # Replace with your actual module
 
 import pydicom_seg
 import SimpleITK as sitk
@@ -54,7 +53,6 @@ def get_series_data(series):
     response = requests.get(f"{orthanc_url}/series/{series}/numpy")
     response.raise_for_status()
     series_data = np.load(io.BytesIO(response.content))
-    # series_data = np.swapaxes(series_data.copy(), 0, 3)
     return series_data
 
 def get_patients_series(patient_id):
@@ -172,14 +170,6 @@ def create_dicom_seg(segmentation_result, reference_dicom_dir_path, series_info,
     temp_dir = tempfile.mkdtemp()
     segmentation_result_formatted = np.transpose(segmentation_result[0], (2, 0, 1)).astype(np.uint8)
     # segmentation_result_formatted = segmentation_result[0].astype(np.uint8)
-    
-    # Load reference DICOM files to use as a template for the segmentation DICOM
-    # dcm_files = [os.path.join(reference_dicom_dir_path, f) for f in os.listdir(reference_dicom_dir_path) if f.endswith('.dcm')]
-    # dcm_files = [os.path.join(dir_path, f) for dir_path in reference_dicom_dir_paths for f in os.listdir(dir_path) if f.endswith('.dcm')]
-
-    # source_images = [pydicom.dcmread(x, stop_before_pixels=True) for x in dcm_files]
-    # if source_images[0].Modality == 'SEG':
-    #     return None
 
     # Create a DICOM SEG template
     template = pydicom_seg.template.from_dcmqi_metainfo('/mnt/sda/freelance_project_girgis/Visualization/sync_inference_code/metainfo.json')
@@ -187,7 +177,6 @@ def create_dicom_seg(segmentation_result, reference_dicom_dir_path, series_info,
     # Create a DICOM SEG writer
     writer = pydicom_seg.MultiClassWriter(template=template)
 
-#################################
     reader = sitk.ImageSeriesReader()
     dcm_files = reader.GetGDCMSeriesFileNames(reference_dicom_dir_path)
     source_images = [pydicom.dcmread(x, stop_before_pixels=True) for x in dcm_files]
@@ -195,9 +184,6 @@ def create_dicom_seg(segmentation_result, reference_dicom_dir_path, series_info,
         return None
     reader.SetFileNames(dcm_files)
     image = reader.Execute()
-    # image_data = sitk.GetArrayFromImage(image)
-
-##########################################
 
     # Create a SimpleITK image from the numpy array
     segmentation_image = sitk.GetImageFromArray(segmentation_result_formatted)
@@ -205,88 +191,12 @@ def create_dicom_seg(segmentation_result, reference_dicom_dir_path, series_info,
 
     # Write the DICOM SEG file
     dcm_seg = writer.write(segmentation_image, source_images)
-
-    # # Modify necessary DICOM tags to differentiate the segmentation series
-    # dcm_seg.SeriesInstanceUID = generate_uid()  # Create a new unique SeriesInstanceUID
-    # dcm_seg.Modality = 'SEG'  # Set the modality to SEG
-    # dcm_seg.SeriesDescription = f'Segmentation series {series_num}'  # Set a descriptive series description
-
-    # # Set new SOPInstanceUID in the the segmentation_image
-    # # for i in range(segmentation_image.GetDepth()):
-    # dcm_seg.SOPInstanceUID = generate_uid()  # Generate a unique SOPInstanceUID
-    # dcm_seg.file_meta.MediaStorageSOPInstanceUID = dcm_seg.SOPInstanceUID
-    # dcm_seg.SeriesNumber = '300'  # You may choose a different series number
-
-    # # Create a ReferencedSeriesSequence that references the original series
-    # referenced_series_sequence = Sequence()
-    # for i, source_image in enumerate(source_images):
-    #     # Create a dataset that will be added to the sequence
-    #     referenced_series_item = Dataset()
-    #     referenced_series_item.ReferencedSOPClassUID = source_image.SOPClassUID
-    #     referenced_series_item.ReferencedSOPInstanceUID = source_image.SOPInstanceUID
-    #     # Add the series instance UID of the source images
-    #     referenced_series_item.SeriesInstanceUID = series_info['MainDicomTags']['SeriesInstanceUID']
-    #     referenced_series_sequence.append(referenced_series_item)
-
-    # # Add the ReferencedSeriesSequence to your DICOM SEG object
-    # dcm_seg.ReferencedSeriesSequence = referenced_series_sequence
-    
-    # ds = dicom.dcmread("/mnt/sda/freelance_project_girgis/Visualization/example_data/Segmentation 1")
     
     # Save the DICOM SEG file
     dcm_seg_path = os.path.join(temp_dir, 'output_seg.dcm')
     dcm_seg.save_as(dcm_seg_path)
 
     return dcm_seg_path
-
-
-# def create_dicom_seg(segmentation_result, reference_dicom_dir_path, series_info):
-#     temp_dir = tempfile.mkdtemp()
-#     segmentation_result_formatted = np.transpose(segmentation_result[0], (2, 0, 1)).astype(np.uint8)
-
-#     # Assuming the reference DICOM directory contains .dcm files
-#     # Obtain the series ID for the DICOM series in the directory
-#     series_IDs = sitk.ImageSeriesReader.GetGDCMSeriesIDs(reference_dicom_dir_path)
-#     if not series_IDs:
-#         raise ValueError("Could not find DICOM series in the specified directory.")
-
-#     # Retrieve file names for the series ID and sort them
-#     series_file_names = sitk.ImageSeriesReader.GetGDCMSeriesFileNames(reference_dicom_dir_path, series_IDs[0])
-
-#     # Read the series into a 3D image
-#     series_reader = sitk.ImageSeriesReader()
-#     series_reader.SetFileNames(series_file_names)
-#     series_reader.MetaDataDictionaryArrayUpdateOn()
-#     series_reader.LoadPrivateTagsOn()
-#     image3D = series_reader.Execute()
-
-#     segmentation_image = sitk.GetImageFromArray(segmentation_result_formatted)
-
-#     # Now you can copy the information from the image3D to the segmentation_image
-#     segmentation_image.CopyInformation(image3D)
-
-#     # Create a DICOM SEG template
-#     template = pydicom_seg.template.from_dcmqi_metainfo('/mnt/sda/freelance_project_girgis/Visualization/sync_inference_code/metainfo.json')
-
-#     # Create a DICOM SEG writer
-#     writer = pydicom_seg.MultiClassWriter(template=template)
-#     dcm_files = [os.path.join(reference_dicom_dir_path, f) for f in os.listdir(reference_dicom_dir_path) if f.endswith('.dcm')]
-#     source_images = [
-#     pydicom.dcmread(x, stop_before_pixels=True)
-#     for x in dcm_files
-#     ]
-#     # Write the DICOM SEG file
-#     dcm_seg = writer.write(segmentation_image, source_images )
-
-#     # Modify necessary DICOM tags
-#     dcm_seg.SeriesInstanceUID = series_info['MainDicomTags']['SeriesInstanceUID']
-#     # Set other DICOM SEG specific tags as required
-
-#     # Save the DICOM SEG file
-#     dcm_seg_path = os.path.join(temp_dir, 'output_seg.dcm')
-#     dcm_seg.save_as(dcm_seg_path)
-
-#     return dcm_seg_path
     
 def upload_dicom_to_orthanc(dcm_seg_path):
     with open(dcm_seg_path, 'rb') as file:
@@ -298,14 +208,7 @@ def process_new_patients():
     for patient in list_new_patients():
         patient_data_dir_path, refrence_dicom_dir_paths, series_infos = download_patient(patient)
         model_path = "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt"        
- 
-        # with open('/mnt/sda/freelance_project_girgis/Visualization/sync_inference_code/seg_res2.pkl', 'rb') as file:
-        #     segmentation_result = pickle.load(file)
-            
-        segmentation_result = perform_segmentation(model_path, patient_data_dir_path) #[np.zeros((256,256,2)).astype(np.uint8)]
-        
-        # with open('/mnt/sda/freelance_project_girgis/Visualization/sync_inference_code/seg_res2.pkl', 'wb') as file:
-        #     pickle.dump(segmentation_result, file)
+        segmentation_result = perform_segmentation(model_path, patient_data_dir_path)
         
         dcm_seg_paths = []
         for i, refrence_dicom_dir_path in enumerate(refrence_dicom_dir_paths):
