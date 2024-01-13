@@ -1,0 +1,85 @@
+{
+    "@schema": "https://raw.githubusercontent.com/qiicr/dcmqi/master/doc/schemas/seg-schema.json#",
+
+    "ContentCreatorName": "Doe^John",
+    "ClinicalTrialSeriesID": "Session1",
+    "ClinicalTrialTimePointID": "1",
+    "ClinicalTrialCoordinatingCenterName": "BWH",
+    "SeriesDescription": "Segmentation",
+    "SeriesNumber": "300",
+    "InstanceNumber": "1",
+    "segmentAttributes": [
+        [
+            {
+                "labelID": 1,
+                "SegmentDescription": "Tumor Core",
+                "SegmentLabel": "Tumor Core",
+                "SegmentAlgorithmType": "AUTOMATIC",
+                "SegmentAlgorithmName": "SwinUNETR",
+                "SegmentedPropertyCategoryCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Tissue"
+                },
+                "SegmentedPropertyTypeCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Tumor Core"
+                },
+                "recommendedDisplayRGBValue": [
+                    255,
+                    0,
+                    0
+                ]
+            },
+
+            {
+                "labelID": 2,
+                "SegmentDescription": "Whole Tumor",
+                "SegmentLabel": "Whole Tumor",
+                "SegmentAlgorithmType": "AUTOMATIC",
+                "SegmentAlgorithmName": "SwinUNETR",
+                "SegmentedPropertyCategoryCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Tissue"
+                },
+                "SegmentedPropertyTypeCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Whole Tumor"
+                },
+                "recommendedDisplayRGBValue": [
+                    0,
+                    255,
+                    0
+                ]
+            },
+
+            {
+                "labelID": 3,
+                "SegmentDescription": "Enhancing Tumor",
+                "SegmentLabel": "Enhancing Tumor",
+                "SegmentAlgorithmType": "AUTOMATIC",
+                "SegmentAlgorithmName": "SwinUNETR",
+                "SegmentedPropertyCategoryCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Tissue"
+                },
+                "SegmentedPropertyTypeCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Enhancing Tumor"
+                },
+                "recommendedDisplayRGBValue": [
+                    0,
+                    0,
+                    255
+                ]
+            }
+        ]
+    ],
+    "ContentLabel": "SEGMENTATION",
+    "ContentDescription": "Image segmentation"
+}

@@ -1,0 +1,7 @@
+.vscode/
+data/
+old_runs/
+runs/
+runs_best/
+*/example_data/
+*/.backup/

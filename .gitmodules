@@ -1,0 +1,6 @@
+[submodule "CancerDetection"]
+	path = CancerDetection
+	url = https://github.com/Girgis98/Cancer_Detection.git
+[submodule "Visualization/Viewers_Brain_Cancer"]
+	path = Visualization/Viewers_Brain_Cancer
+	url = https://github.com/Girgis98/Viewers_Brain_Cancer.git
