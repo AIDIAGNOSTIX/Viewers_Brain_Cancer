@@ -1,23 +1,11 @@
 [
     {
-        "patient_id": "6a08d626-bc555a03-f727670d-5b358610-a093cfb5",
-        "patient_series": [
-            "6dcc1ebb-7307e7d2-22a9f04d-3b88e788-f400736f"
-        ]
-    },
-    {
         "patient_id": "70f6744f-9d706844-8c08697e-3d0a4bcb-4b771570",
         "patient_series": [
             "a9eaf179-7503d821-40ce1e9b-e42616cf-b1814fca",
             "b6dd9097-d57b6a11-95f49866-f3643dfa-c60ada45",
             "c77785af-fd4caacf-dd9b0f12-e9577c14-bc4b037c",
             "f219067a-7768c78f-ef54045a-88109acf-c57d05b9"
-        ]
-    },
-    {
-        "patient_id": "8d9f9e0f-be5bccf7-12072b74-64719104-321c0cb2",
-        "patient_series": [
-            "13b32cd5-46e5b07a-8ea482fb-9a936b46-392a1a5a"
         ]
     }
 ]
