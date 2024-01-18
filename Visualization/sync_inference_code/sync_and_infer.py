@@ -204,10 +204,16 @@ def upload_dicom_to_orthanc(dcm_seg_path):
         response = requests.post(f"{orthanc_url}/instances", files=files)
     return response.status_code == 200
 
+def get_model_path():
+    model_path_config_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "model_path.txt"))
+    with open(model_path_config_file, 'r') as f:
+        model_path = f.read().strip()
+    return model_path
+
 def process_new_patients():
     for patient in list_new_patients():
         patient_data_dir_path, refrence_dicom_dir_paths, series_infos = download_patient(patient)
-        model_path = "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt"        
+        model_path = get_model_path()#"/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt"        
         segmentation_result = perform_segmentation(model_path, patient_data_dir_path)
         
         dcm_seg_paths = []

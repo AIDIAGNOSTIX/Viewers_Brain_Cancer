@@ -1,0 +1,1 @@
+/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt
