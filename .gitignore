@@ -1,7 +1,8 @@
-.vscode/
-data/
-old_runs/
-runs/
-runs_best/
-*/example_data/
-*/.backup/
+**/.vscode/
+**/data/
+**/old_runs/
+**/runs/
+**/runs_best/
+**/example_data/
+**/.backup/
+**/previous_patients.json
