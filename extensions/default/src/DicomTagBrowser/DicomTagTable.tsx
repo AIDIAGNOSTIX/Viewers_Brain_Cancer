@@ -17,7 +17,7 @@ function ColumnHeaders({ tagRef, vrRef, keywordRef, valueRef }) {
   return (
     <div
       className={classNames(
-        'bg-secondary-dark ohif-scrollbar flex w-full flex-row overflow-y-scroll'
+        'bg-main ohif-scrollbar flex w-full flex-row overflow-y-scroll'
       )}
       style={rowVerticalPaddingStyle}
     >
@@ -124,7 +124,7 @@ function DicomTagTable({ rows }) {
         <div
           style={{ ...style, ...rowStyle }}
           className={classNames(
-            'hover:bg-secondary-main border-secondary-light flex w-full flex-row items-center break-all bg-black text-base transition duration-300',
+            'hover:bg-secondary_light border-secondary-light flex w-full flex-row items-center break-all bg-black text-base transition duration-300',
             lineHeightClassName
           )}
           key={`DICOMTagRow-${index}`}

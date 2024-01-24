@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import Icon from '../Icon';
 import Typography from '../Typography';
 
-const borderStyle = 'border-b last:border-b-0 border-secondary-main';
+const borderStyle = 'border-b last:border-b-0 border-secondary_main';
 
 const Dropdown = ({
   id,
@@ -45,7 +45,7 @@ const Dropdown = ({
         <div
           key={title}
           className={classnames(
-            'hover:bg-secondary-main flex cursor-pointer items-center px-4 py-2 transition duration-300 ',
+            'hover:bg-secondary_main flex cursor-pointer items-center px-4 py-2 transition duration-300 ',
             titleClassName,
             showBorders && borderStyle
           )}
@@ -116,7 +116,7 @@ const Dropdown = ({
     return (
       <div
         className={classnames(
-          'top-100 border-secondary-main absolute z-10 mt-2 transform rounded border bg-black shadow transition duration-300',
+          'top-100 border-secondary_main absolute z-10 mt-2 transform rounded border bg-black shadow transition duration-300',
           {
             'right-0 origin-top-right': alignment === 'right',
             'left-0 origin-top-left': alignment === 'left',

@@ -365,7 +365,7 @@ const ViewportDownloadForm = ({
 
       <div className="mt-8">
         <div
-          className="bg-secondary-dark border-secondary-primary w-max-content min-w-full rounded p-4"
+          className="bg-main border-secondary-primary w-max-content min-w-full rounded p-4"
           data-cy="image-preview"
         >
           <Typography variant="h5">{t('Image preview')}</Typography>

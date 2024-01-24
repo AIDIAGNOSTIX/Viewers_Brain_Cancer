@@ -99,12 +99,12 @@ function ToolbarSplitButtonWithServices({
     return (
       <div
         className={classNames(
-          'hover:bg-primary-dark flex h-8 w-full flex-row items-center p-3',
+          'hover:bg-main_light flex h-8 w-full flex-row items-center p-3',
           'whitespace-pre text-base',
-          isActive && 'bg-primary-dark',
+          isActive && 'bg-main_light',
           isActive
             ? 'text-[#348CFD]'
-            : 'text-common-bright hover:bg-primary-dark hover:text-primary-light'
+            : 'text-common-bright hover:bg-main_light hover:text-primary-light'
         )}
       >
         {icon && (

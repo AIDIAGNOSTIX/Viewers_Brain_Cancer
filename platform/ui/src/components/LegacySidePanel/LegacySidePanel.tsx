@@ -148,7 +148,7 @@ const LegacySidePanel = ({
       <>
         <div
           className={classnames(
-            'bg-secondary-dark flex h-[28px] w-full cursor-pointer items-center rounded-md',
+            'bg-main flex h-[28px] w-full cursor-pointer items-center rounded-md',
             side === 'left' ? 'justify-end pr-2' : 'justify-start pl-2'
           )}
           onClick={() => {
@@ -208,7 +208,7 @@ const LegacySidePanel = ({
           {/** Panel Header with Arrow and Close Actions */}
           <div
             className={classnames(
-              'flex-static bg-primary-dark flex h-9 cursor-pointer px-[10px]',
+              'flex-static bg-main_light flex h-9 cursor-pointer px-[10px]',
               tabs.length === 1 && 'mb-1'
             )}
             onClick={() => {
@@ -253,7 +253,7 @@ const LegacySidePanel = ({
           {/** carousel navigation with the arrows */}
           {/** only show carousel nav if tabs are more than 3 tabs */}
           {tabs.length > 3 && (
-            <div className="text-primary-active bg-primary-dark flex w-full justify-end gap-2 py-1 px-2">
+            <div className="text-primary-active bg-main_light flex w-full justify-end gap-2 py-1 px-2">
               <button
                 ref={prevRef}
                 className="swiper-button-prev-custom"
@@ -340,7 +340,7 @@ function _getMoreThanOneTabLayout(
             <SwiperSlide key={index}>
               <div
                 className={classnames(
-                  index === activeTabIndex ? 'bg-secondary-main text-white' : 'text-aqua-pale',
+                  index === activeTabIndex ? 'bg-secondary_main text-white' : 'text-aqua-pale',
                   'flex cursor-pointer flex-col items-center justify-center  rounded-[4px] px-4 py-1 text-center hover:text-white'
                 )}
                 key={index}

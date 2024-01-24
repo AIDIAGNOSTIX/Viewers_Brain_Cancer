@@ -86,7 +86,7 @@ const StudyListFilter = ({
         </div>
       </div>
       <div className="sticky -top-1 z-10 mx-auto border-b-4 border-black">
-        <div className="bg-primary-dark pt-3 pb-3">
+        <div className="bg-main_light pt-3 pb-3">
           <InputGroup
             inputMeta={filtersMeta}
             values={filterValues}

@@ -52,7 +52,7 @@ function PatientInfo({
                 >
                   {patientName}
                 </span>
-                <div className="border-secondary-main mt-4 mb-4 flex border-b pb-4">
+                <div className="border-secondary_main mt-4 mb-4 flex border-b pb-4">
                   <div className={classnames(classes.firstRow)}>
                     <span className={classnames(classes.infoHeader)}>{t('Sex')}</span>
                     <span

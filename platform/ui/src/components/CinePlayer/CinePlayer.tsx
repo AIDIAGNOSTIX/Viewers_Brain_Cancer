@@ -56,7 +56,7 @@ const CinePlayer: React.FC<CinePlayerProps> = ({
     <div
       className={classNames(
         className,
-        'border-secondary-light/60 bg-primary-dark flex select-none items-center gap-2 rounded border px-2 py-2'
+        'border-secondary-light/60 bg-main_light flex select-none items-center gap-2 rounded border px-2 py-2'
       )}
     >
       <Icon

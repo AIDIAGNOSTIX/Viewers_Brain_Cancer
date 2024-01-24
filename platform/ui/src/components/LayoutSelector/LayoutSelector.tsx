@@ -19,7 +19,7 @@ function LayoutSelector({ onSelection, rows, columns }) {
         display: 'grid',
         gridTemplateColumns: gridSize.repeat(columns),
         gridTemplateRows: gridSize.repeat(rows),
-        backgroundColor: '#090c29', // primary-dark
+        backgroundColor: '#151a1f', // primary-dark
       }}
       className="p-2"
     >

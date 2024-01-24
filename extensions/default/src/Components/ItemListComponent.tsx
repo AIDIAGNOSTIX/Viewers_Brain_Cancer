@@ -46,7 +46,7 @@ function ItemListComponent({
           </div>
         ) : (
           <>
-            <div className="bg-secondary-dark px-3 py-1.5 text-white">{t(itemLabel)}</div>
+            <div className="bg-main px-3 py-1.5 text-white">{t(itemLabel)}</div>
             <div className="ohif-scrollbar overflow-auto">
               {itemList
                 .filter(
@@ -59,7 +59,7 @@ function ItemListComponent({
                   return (
                     <div
                       className={classNames(
-                        'hover:text-primary-light hover:bg-primary-dark group mx-2 flex items-center justify-between px-6 py-2',
+                        'hover:text-primary-light hover:bg-main_light group mx-2 flex items-center justify-between px-6 py-2',
                         border
                       )}
                       key={item.id}

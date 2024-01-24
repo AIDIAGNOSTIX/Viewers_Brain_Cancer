@@ -21,7 +21,7 @@ const StudyItem = ({
   return (
     <div
       className={classnames(
-        isActive ? 'bg-secondary-dark' : 'hover:bg-secondary-main bg-black',
+        isActive ? 'bg-main' : 'hover:bg-secondary_main bg-black',
         baseClasses
       )}
       onClick={onClick}
@@ -49,7 +49,7 @@ const StudyItem = ({
         <div className="flex-2 flex">
           <div
             className={classnames(
-              'bg-secondary-main mt-2 flex flex-row py-1 pl-2 pr-4 text-base text-white ',
+              'bg-secondary_main mt-2 flex flex-row py-1 pl-2 pr-4 text-base text-white ',
               isActive
                 ? 'border-secondary-light flex-1 justify-center border-t'
                 : 'mx-4 mb-4 rounded-sm'

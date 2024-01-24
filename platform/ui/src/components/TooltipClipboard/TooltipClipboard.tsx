@@ -138,7 +138,7 @@ const TooltipClipboard = ({ children, text }) => {
       >
         <div
           className={classnames(
-            'bg-primary-dark border-secondary-main relative flex items-center rounded border px-2 py-2 text-base text-white'
+            'bg-main_light border-secondary_main relative flex items-center rounded border px-2 py-2 text-base text-white'
           )}
         >
           {message || (

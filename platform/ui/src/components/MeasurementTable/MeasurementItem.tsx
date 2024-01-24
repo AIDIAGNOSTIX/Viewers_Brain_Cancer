@@ -35,7 +35,7 @@ const MeasurementItem = ({ uid, index, label, displayText, isActive, onClick, on
       <div
         className={classnames('w-6 py-1 text-center text-base transition duration-300', {
           'bg-primary-light active text-black': isActive,
-          'bg-primary-dark text-primary-light group-hover:bg-secondary-main': !isActive,
+          'bg-main_light text-primary-light group-hover:bg-secondary_main': !isActive,
         })}
       >
         {index}

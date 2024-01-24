@@ -14,7 +14,7 @@ function ROIThresholdConfiguration({ config, dispatch, runCommand }) {
   const { t } = useTranslation('ROIThresholdConfiguration');
 
   return (
-    <div className="bg-primary-dark flex flex-col space-y-4 px-4 py-2">
+    <div className="bg-main_light flex flex-col space-y-4 px-4 py-2">
       <div className="flex items-end space-x-2">
         <div className="flex w-1/2 flex-col">
           <Select

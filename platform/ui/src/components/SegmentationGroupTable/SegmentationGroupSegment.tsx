@@ -36,9 +36,9 @@ const SegmentItem = ({
       data-cy={'segment-item'}
     >
       <div
-        className={classnames('bg-primary-dark group/number grid w-[32px] place-items-center', {
+        className={classnames('bg-main_light group/number grid w-[32px] place-items-center', {
           'bg-primary-light border-primary-light rounded-l-[4px] border text-black': isActive,
-          'border-primary-dark border': !isActive,
+          'border-main_light border': !isActive,
         })}
         onMouseEnter={() => setIsNumberBoxHovering(true)}
         onMouseLeave={() => setIsNumberBoxHovering(false)}
@@ -63,11 +63,11 @@ const SegmentItem = ({
       </div>
       <div
         className={classnames('relative flex w-full', {
-          'border-primary-light bg-primary-dark rounded-r-[4px] border border-l-0': isActive,
+          'border-primary-light bg-main_light rounded-r-[4px] border border-l-0': isActive,
           'border border-l-0 border-transparent': !isActive,
         })}
       >
-        <div className="group-hover/row:bg-primary-dark flex h-full w-full flex-grow items-center">
+        <div className="group-hover/row:bg-main_light flex h-full w-full flex-grow items-center">
           <div className="pl-2 pr-1.5">
             <div
               className={classnames('h-[8px] w-[8px] grow-0 rounded-full', {

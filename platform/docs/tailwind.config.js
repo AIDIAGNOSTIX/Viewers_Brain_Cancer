@@ -21,6 +21,10 @@ module.exports = {
       white: '#fff',
       initial: 'initial',
       inherit: 'inherit',
+      main: '#0f1114',
+      main_light: '#151a1f',
+      secondary_main: '#2c363f',
+      inputfield_main: '#0d8dd0',
 
       indigo: {
         dark: '#0b1a42',

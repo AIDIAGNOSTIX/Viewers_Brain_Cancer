@@ -25,7 +25,7 @@ const classes = {
   Button: ({ isExpanded, primary }) =>
     classNames(
       baseClasses.Button,
-      !isExpanded && !primary.isActive && 'hover:!bg-primary-dark hover:border-primary-dark'
+      !isExpanded && !primary.isActive && 'hover:!bg-main_light hover:border-main_light'
     ),
   Interface: 'h-full flex flex-row items-center',
   Primary: ({ primary, isExpanded }) =>
@@ -33,7 +33,7 @@ const classes = {
       baseClasses.Primary,
       primary.isActive
         ? isExpanded
-          ? 'border-primary-dark !bg-primary-dark hover:border-primary-dark !text-primary-light'
+          ? 'border-main_light !bg-main_light hover:border-main_light !text-primary-light'
           : `${
               primary.isToggle
                 ? 'border-secondary-dark bg-secondary-light'
@@ -43,8 +43,8 @@ const classes = {
         : `focus:!text-black focus:!rounded-md focus:!border-primary-light focus:!bg-primary-light
         ${
           isExpanded
-            ? 'border-primary-dark bg-primary-dark !text-primary-light'
-            : 'border-secondary-dark bg-secondary-dark group-hover/button:border-primary-dark group-hover/button:text-primary-light hover:!bg-primary-dark hover:border-primary-dark focus:!text-black'
+            ? 'border-main_light bg-main_light !text-primary-light'
+            : 'border-secondary-dark bg-main group-hover/button:border-main_light group-hover/button:text-primary-light hover:!bg-main_light hover:border-main_light focus:!text-black'
         }
         `
     ),
@@ -54,13 +54,13 @@ const classes = {
       isExpanded
         ? 'bg-primary-light !rounded-tr-md !rounded-br-md'
         : primary.isActive
-        ? 'bg-secondary-dark'
-        : 'hover:bg-primary-dark bg-secondary-dark group-hover/button:border-primary-dark'
+        ? 'bg-main'
+        : 'hover:bg-main_light bg-main group-hover/button:border-main_light'
     ),
   SecondaryIcon: ({ isExpanded }) =>
     classNames(
       baseClasses.SecondaryIcon,
-      isExpanded ? 'text-primary-dark' : 'text-[#348cfd] group-hover/secondary:text-primary-light'
+      isExpanded ? 'text-main_light' : 'text-[#348cfd] group-hover/secondary:text-primary-light'
     ),
   Separator: ({ primary, isExpanded, isHovering }) =>
     classNames(

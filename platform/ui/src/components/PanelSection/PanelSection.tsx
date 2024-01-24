@@ -12,7 +12,7 @@ const PanelSection = ({ title, children, actionIcons = [] }) => {
   return (
     <>
       <div
-        className="bg-secondary-dark mt-[2px] flex h-7 cursor-pointer select-none items-center justify-between rounded-[4px] pl-2.5 text-[13px]"
+        className="bg-main mt-[2px] flex h-7 cursor-pointer select-none items-center justify-between rounded-[4px] pl-2.5 text-[13px]"
         onClick={handleHeaderClick}
       >
         <div className="text-aqua-pale">{title}</div>
@@ -38,7 +38,7 @@ const PanelSection = ({ title, children, actionIcons = [] }) => {
       {areChildrenVisible && (
         <>
           <div className="h-[2px] bg-black"></div>
-          <div className="bg-primary-dark rounded-b-[4px]">{children}</div>
+          <div className="bg-main_light rounded-b-[4px]">{children}</div>
         </>
       )}
     </>
