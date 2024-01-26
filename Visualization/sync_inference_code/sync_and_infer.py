@@ -24,14 +24,35 @@ import pickle
 
 # Configuration
 orthanc_url = "http://localhost:8042"
-previous_patients_file = "/mnt/sda/freelance_project_girgis/Visualization/sync_inference_code/previous_patients.json"
+previous_patients_file = os.path.join(os.path.dirname(__file__),"previous_patients.json") #"/mnt/sda/freelance_project_girgis/Visualization/sync_inference_code/previous_patients.json"
 poll_interval_seconds = 5  # Check every 5 seconds
 
+# def load_previous_patients():
+#     if os.path.exists(previous_patients_file):
+#         with open(previous_patients_file, "r") as file:
+#             return json.load(file)
+#     return set()
+
 def load_previous_patients():
+    global previous_patients_file
+    file_path = previous_patients_file
     if os.path.exists(previous_patients_file):
-        with open(previous_patients_file, "r") as file:
-            return json.load(file)
-    return set()
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+            # Check if the file is empty
+            if not content:
+                print("There was no past patients detected in previous patients file.")
+                return set()
+            # Check if the content is valid JSON
+            try:
+                data = json.loads(content)
+                return data
+            except json.JSONDecodeError as e:
+                print(f"An error occurred while decoding JSON: {e}")
+                print(f"Content: {content}")
+                return set()
+    else:
+        return set()
 
 def save_previous_patients(patients):
     with open(previous_patients_file, "w") as file:

@@ -12,29 +12,6 @@
         [
             {
                 "labelID": 1,
-                "SegmentDescription": "Tumor Core",
-                "SegmentLabel": "Tumor Core",
-                "SegmentAlgorithmType": "AUTOMATIC",
-                "SegmentAlgorithmName": "SwinUNETR",
-                "SegmentedPropertyCategoryCodeSequence": {
-                    "CodeValue": "T-D0050",
-                    "CodingSchemeDesignator": "SRT",
-                    "CodeMeaning": "Tissue"
-                },
-                "SegmentedPropertyTypeCodeSequence": {
-                    "CodeValue": "T-D0050",
-                    "CodingSchemeDesignator": "SRT",
-                    "CodeMeaning": "Tumor Core"
-                },
-                "recommendedDisplayRGBValue": [
-                    255,
-                    0,
-                    0
-                ]
-            },
-
-            {
-                "labelID": 2,
                 "SegmentDescription": "Whole Tumor",
                 "SegmentLabel": "Whole Tumor",
                 "SegmentAlgorithmType": "AUTOMATIC",
@@ -48,6 +25,29 @@
                     "CodeValue": "T-D0050",
                     "CodingSchemeDesignator": "SRT",
                     "CodeMeaning": "Whole Tumor"
+                },
+                "recommendedDisplayRGBValue": [
+                    255,
+                    0,
+                    0
+                ]
+            },
+
+            {
+                "labelID": 2,
+                "SegmentDescription": "Tumor Core",
+                "SegmentLabel": "Tumor Core",
+                "SegmentAlgorithmType": "AUTOMATIC",
+                "SegmentAlgorithmName": "SwinUNETR",
+                "SegmentedPropertyCategoryCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Tissue"
+                },
+                "SegmentedPropertyTypeCodeSequence": {
+                    "CodeValue": "T-D0050",
+                    "CodingSchemeDesignator": "SRT",
+                    "CodeMeaning": "Tumor Core"
                 },
                 "recommendedDisplayRGBValue": [
                     0,
