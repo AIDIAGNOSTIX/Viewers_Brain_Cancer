@@ -253,6 +253,10 @@ def process_new_patients():
 if __name__ == "__main__":
     # This script could be scheduled to run at regular intervals
     while True:
-        process_new_patients()
-        print('Waiting...')
-        time.sleep(poll_interval_seconds)
+        try:
+            process_new_patients()
+            print('Waiting...')
+            time.sleep(poll_interval_seconds)
+        except Exception as e:
+            print(e)
+            
