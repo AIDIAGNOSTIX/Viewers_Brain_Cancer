@@ -27,12 +27,6 @@ orthanc_url = "http://localhost:8042"
 previous_patients_file = os.path.join(os.path.dirname(__file__),"previous_patients.json") #"/mnt/sda/freelance_project_girgis/Visualization/sync_inference_code/previous_patients.json"
 poll_interval_seconds = 5  # Check every 5 seconds
 
-# def load_previous_patients():
-#     if os.path.exists(previous_patients_file):
-#         with open(previous_patients_file, "r") as file:
-#             return json.load(file)
-#     return set()
-
 def load_previous_patients():
     global previous_patients_file
     file_path = previous_patients_file
