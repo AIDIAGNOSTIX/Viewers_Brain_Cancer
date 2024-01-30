@@ -7,4 +7,5 @@
 **/example_data/
 **/.backup/
 **/previous_patients.json
+**/previous_patients_restrctured.json
 **/previous_patients
