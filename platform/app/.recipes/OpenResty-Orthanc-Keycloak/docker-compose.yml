@@ -47,7 +47,7 @@ services:
 
   # LINK: https://hub.docker.com/r/jboss/keycloak
   keycloak:
-    image: eduardosanzb/keycloak:latest
+    image: jboss/keycloak:13.0.1
     hostname: keycloak
     container_name: keycloak
     volumes:
@@ -67,7 +67,7 @@ services:
       # Keycloak
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: password
-      KEYCLOAK_IMPORT: /tmp/ohif-keycloak-realm.json
+      KEYCLOAK_IMPORT: /tmp/ohif-keycloak-realm.json -Dkeycloak.profile.feature.upload_scripts=enabled
       # KEYCLOAK_WELCOME_THEME: <theme-name>
       # KEYCLOAK_DEFAULT_THEME: <theme-name>
       # KEYCLOAK_HOSTNAME: (recommended in prod)
@@ -79,7 +79,7 @@ services:
 
   # LINK: https://hub.docker.com/_/postgres/
   postgres:
-    image: postgres:11.2
+    image: postgres:14.10
     hostname: postgres
     container_name: postgres
     volumes:

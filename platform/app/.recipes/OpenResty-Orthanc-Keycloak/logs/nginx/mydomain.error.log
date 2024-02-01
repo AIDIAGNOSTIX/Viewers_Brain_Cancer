@@ -1,0 +1,4 @@
+2024/01/25 01:35:27 [error] 7#7: *1 connect() failed (111: Connection refused) while connecting to upstream, client: 192.168.65.1, server: 127.0.0.1, request: "GET /auth/admin HTTP/1.1", upstream: "http://172.19.0.4:8080/auth/admin", host: "127.0.0.1"
+2024/01/25 03:37:22 [error] 7#7: *1 [lua] openidc.lua:581: openidc_discover(): could not decode JSON from Discovery data: response indicates failure, status=404, body={"error":"Realm does not exist"}, client: 192.168.65.1, server: 127.0.0.1, request: "GET /pacs-admin/ HTTP/1.1", host: "127.0.0.1"
+2024/01/25 03:37:22 [error] 7#7: *1 attempt to set ngx.status after sending out response headers, client: 192.168.65.1, server: 127.0.0.1, request: "GET /pacs-admin/ HTTP/1.1", host: "127.0.0.1"
+2024/01/25 03:37:22 [error] 7#7: *1 attempt to set status 403 via ngx.exit after sending out the response status 200, client: 192.168.65.1, server: 127.0.0.1, request: "GET /pacs-admin/ HTTP/1.1", host: "127.0.0.1"
