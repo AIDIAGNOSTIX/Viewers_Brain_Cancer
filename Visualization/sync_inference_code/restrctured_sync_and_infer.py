@@ -1,5 +1,6 @@
 import requests
 import numpy as np
+from torch import inf
 import pydicom
 import os, sys
 
@@ -43,7 +44,7 @@ class Patient():
         self.get_all_series()
         self.infered = self.contains_seg()
         self.inference_modes = []
-        self.segmentation_result = None
+        self.segmentation_results = []
         self.dcm_seg_paths = []
         # Create a DICOM SEG template
         self.template = pydicom_seg.template.from_dcmqi_metainfo(os.path.join(os.path.dirname(__file__),"metainfo.json"))
@@ -78,14 +79,14 @@ class Patient():
             # Save the NIfTI image as a .nii.gz file
             nifti_img.to_filename(series_path)
             refrence_dicom_dir_path = get_dicom_refrence(series.id)
-            self.refrence_dicom_dir_paths.append(refrence_dicom_dir_path)
+            self.refrence_dicom_dir_paths.append(refrence_dicom_dir_path) # TODO: IN THIS LINE ADD INFO ABOUT REFERENCE MODE (TO BE USED LATER WHEN CREATING SEGEMNTATION FOR SOURCE IMAGES)
     
     def validate(self): # do not run if seg already exists for patient (for now)
         if self.infered:
             return False
         else:
             self.save_if_ok = False
-            return True    
+            return True
     
     def get_patient_info(self):
         return requests.get(f"{orthanc_url}/patients/{self.id}").json()
@@ -96,11 +97,13 @@ class Patient():
         self.inference_modes = list(set(self.inference_modes))
         return self.inference_modes
             
-    def set_segmentation_result(self, result):
-        self.segmentation_result = np.transpose(result.copy()[0], (2, 0, 1)).astype(np.uint8)
+    def set_segmentation_result(self, results):
+        for result in results:
+            self.segmentation_results.append((result[0], np.transpose(result[1].copy()[0], (2, 0, 1)).astype(np.uint8)))
         self.infered = True
+        # self.combine_results() # implement this where you vote on the final result using all results
     
-    def create_dicom_seg(self, reference_dicom_dir_path):
+    def create_dicom_seg(self, reference_dicom_dir_path): # TODO : MAKE THIS SEPERATE FOR EACH MODE'S OUTPUT
         temp_dir = tempfile.mkdtemp()
         
         dcm_files = self.reader.GetGDCMSeriesFileNames(reference_dicom_dir_path)
@@ -186,12 +189,23 @@ class Instance():
         self.instances = None
         self.data = None
 
+def get_models_dict():
+    models_dict_path = os.path.abspath(os.path.join(__file__,'../','models_paths.json'))
+    with open(models_dict_path, 'r') as json_file:
+        models_dict = json.load(json_file)
+    return models_dict
 
-def get_model_path(inference_modes): # in the future use inference modes to select most suitable model for inference
-    model_path_config_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "model_path.txt"))
-    with open(model_path_config_file, 'r') as f:
-        model_path = f.read().strip()
-    return model_path
+def get_models_paths(inference_modes, models_dict): # in the future use inference modes to select most suitable model for inference
+    models_paths = []
+    for mode in inference_modes:
+        models_paths.append((mode, models_dict[mode].strip()))
+    if 'flair' in inference_modes and 't2' in inference_modes:
+        models_paths.append(("flair_t2", models_dict['flair_t2'].strip()))
+        if 't1' in inference_modes:
+            models_paths.append(("flair_t1_t2", models_dict['flair_t1_t2'].strip()))
+            if 't1ce' in inference_modes:
+                models_paths.append(("flair_t1ce_t1_t2", models_dict['flair_t1ce_t1_t2'].strip()))
+    return models_paths
 
 def save_new_patients(patients):
     global previous_patients_file, previous_patients_folder
@@ -363,17 +377,21 @@ def process_new_patients():
         # if not then get intersection , compare with fourth if exceeds use three series pair,
         # if not intersect and use all four 
         
-        use = patient.validate() 
-        if not use:
+        infer = patient.validate()
+        if not infer:
             continue
         patient.download()
         
         # which modes to infer with (check internal variables calculated 
-        # during inference and see which modes are gonna be used for inference)
+        # during validate and see which modes are gonna be used for inference)
         inference_modes = patient.get_inference_modes() 
-        model_path = get_model_path(inference_modes)
-        segmentation_result = perform_segmentation(model_path, patient.data_dir_path)
-        patient.set_segmentation_result(segmentation_result)
+        models_dict = get_models_dict()
+        models_paths = get_models_paths(inference_modes, models_dict)
+        segmentation_results = []
+        for model_path in models_paths:
+            segmentation_result = perform_segmentation(model_path[1], patient.data_dir_path, model_path[0])
+            segmentation_results.append((model_path[0], segmentation_results))
+        patient.set_segmentation_result(segmentation_results)
         patient.prepare_dicom_seg()
         patient.upload_dicom_seg()
         to_save.append(patient)
