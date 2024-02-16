@@ -3,7 +3,7 @@
 "flair_t1_t2": "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt",
 "flair_t2": "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt",
 "flair": "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt",
-"t1ce": "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt",
+"t1ce": "/mnt/sda/freelance_project_girgis/runs_best/model_best_model_epoch_409_t1ce__t1ce_lr_0.0002_cosine_warm_restart_scheduler_t0_1000_incremental_timestamp_seed_1703836701.0507798_random_True_dice_avg_0.8480864365612893.pt",
 "t1": "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt",
 "t2": "/mnt/sda/freelance_project_girgis/runs_best/fold4_f48_ep300_4gpu_dice0_9035/model.pt"
 }

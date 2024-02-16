@@ -1,11 +1,11 @@
 import pickle
-from CancerDetection.scripts.infer import infer as perform_segmentation
 import requests
 import numpy as np
 from torch import inf, inference_mode
 import pydicom
 import os
 import sys
+import shutil
 
 import pydicom_seg
 import SimpleITK as sitk
@@ -22,7 +22,7 @@ from pydicom.dataset import Dataset
 from pydicom.sequence import Sequence
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "../../../")))
-
+from CancerDetection.scripts.infer import infer as perform_segmentation
 
 # Configuration
 orthanc_url = "http://localhost:8042"
@@ -31,7 +31,7 @@ previous_patients_file = os.path.join(
 )
 previous_patients_folder = os.path.join(os.path.dirname(__file__), "previous_patients")
 poll_interval_seconds = 5  # Check every 5 seconds
-
+model = None
 
 class Patient:
     def __init__(self, patient_id):
@@ -41,7 +41,7 @@ class Patient:
         self.data_dir_path = None
         self.data_path = None
         self.reference_dicom_dir_paths = []
-        self.save_if_ok = False
+        self.save_if_ok = True
         self.series = []
         self.get_all_series()
         self.inferred = self.contains_seg()
@@ -52,11 +52,16 @@ class Patient:
         self.template = pydicom_seg.template.from_dcmqi_metainfo(
             os.path.join(os.path.dirname(__file__), "metainfo.json")
         )
+        self.to_be_deleted = []
 
         # Create a DICOM SEG writer
         self.writer = pydicom_seg.MultiClassWriter(template=self.template)
 
         self.reader = sitk.ImageSeriesReader()
+
+    def delete_temp(self):
+        for tmp_dir in self.to_be_deleted:
+            shutil.rmtree(tmp_dir)
 
     def contains_seg(self):
         for series in self.series:
@@ -73,13 +78,14 @@ class Patient:
         unique_id = uuid.uuid4()
         # Create a temporary directory
         self.data_dir_path = tempfile.mkdtemp()
+        self.to_be_deleted.append(self.data_dir_path)
         # Create a subdirectory named "BraTS2021_<unique_id>"
         file_name = f"BraTS2021_{unique_id}"
         self.data_path = os.path.join(self.data_dir_path, file_name)
         os.makedirs(self.data_path)
         for series in self.series:
             series_path = os.path.join(
-                self.data_path, f"{file_name}_mode_{series.mode}.nii.gz"
+                self.data_path, f"{file_name}_mode_{series.mode}.nii.gz" # leave _mode to be able to find it later in inference
             )
             nifti_img = nib.Nifti1Image(series.data, affine=np.eye(4))
             # Save the NIfTI image as a .nii.gz file
@@ -138,6 +144,7 @@ class Patient:
     def create_dicom_seg(self, reference_dicom_dir_path):
         mode, reference_dicom_dir_path = reference_dicom_dir_path
         temp_dir = tempfile.mkdtemp()
+        self.to_be_deleted.append(temp_dir)
 
         dcm_files = self.reader.GetGDCMSeriesFileNames(reference_dicom_dir_path)
         source_images = [pydicom.dcmread(x, stop_before_pixels=True) for x in dcm_files]
@@ -153,7 +160,11 @@ class Patient:
         segmentation_image.CopyInformation(image)
 
         # Write the DICOM SEG file
-        dcm_seg = self.writer.write(segmentation_image, source_images)
+        try:
+            dcm_seg = self.writer.write(segmentation_image, source_images)
+        except Exception as e:
+            print(f'segmentation_image sum: {self.get_segmentation_result_per_mode(mode).sum()}')
+            return None
 
         # Save the DICOM SEG file
         dcm_seg_path = os.path.join(temp_dir, "output_seg.dcm")
@@ -198,10 +209,11 @@ class Series:
     def __init__(self, series_id):
         self.id = series_id
         self.info = self.get_series_info()
-        self.instances = None
+        self.instances = self.info['Instances']
+        self.num_instances = len(self.instances)
         self.data = self.get_series_data()
-        self.contributes = True
-        self.used = False
+        self.contributes = True # unused
+        self.used = False # unused
         self.modality = self.info["MainDicomTags"]["Modality"]
         self.mode = self.get_familiar_mode(
             self.info["MainDicomTags"]["SeriesDescription"]
@@ -289,10 +301,12 @@ def save_new_patients(patients):
             # Add any other necessary patient attributes here
         }
         existing_data.append(patient_info)
+        print('saved patient info')
 
     # Save the updated JSON data
     with open(previous_patients_file, "w", encoding="utf-8") as file:
         json.dump(existing_data, file, indent=4)
+    print('updated saved patient json file')
 
 
 def load_previous_patients():
@@ -304,7 +318,7 @@ def load_previous_patients():
             # Check if the file is empty
             if not content:
                 print("There was no past patients detected in previous patients file.")
-                return None
+                return []
             # Check if the content is valid JSON
             try:
                 data = json.loads(content)
@@ -320,9 +334,9 @@ def load_previous_patients():
             except json.JSONDecodeError as e:
                 print(f"An error occurred while decoding JSON: {e}")
                 print(f"Content: {content}")
-                return None
+                return []
     else:
-        return None
+        return []
 
 
 def get_dicom_reference(series_id):
@@ -368,7 +382,7 @@ def check_for_previous_patients_updates(previous_patients):
 
 
 def get_all_patients_ids():
-    return set(requests.get(f"{orthanc_url}/patients").json())
+    return sorted(set(requests.get(f"{orthanc_url}/patients").json()))
 
 
 def get_all_patients(current_patients_ids):
@@ -397,7 +411,7 @@ def mark_for_saving(new_patients):
 
 def list_new_patients():
     previous_patients = load_previous_patients()
-    if previous_patients is not None:
+    if len(previous_patients)>0:
         previous_patients = check_for_previous_patients_updates(previous_patients)
     current_patients_ids = get_all_patients_ids()
     current_patients = get_all_patients(current_patients_ids)
@@ -406,8 +420,11 @@ def list_new_patients():
     return new_patients
 
 
+
+
 def process_new_patients():
-    to_save = []
+    global model
+    # to_save = []
     for patient in list_new_patients():
         # 1. check on patients series, if seg series exists removes it from inference series,
         # check on previously contributing inference series if seg exists if same as now
@@ -440,6 +457,7 @@ def process_new_patients():
 
         infer = patient.validate()
         if not infer:
+            patient.delete_temp()
             continue
         patient.download()
 
@@ -450,15 +468,17 @@ def process_new_patients():
         models_paths = get_models_paths(inference_modes, models_dict)
         segmentation_results = []
         for model_path in models_paths:
-            segmentation_result = perform_segmentation(
-                model_path[1], patient.data_dir_path, model_path[0]
+            segmentation_result, model = perform_segmentation(
+                model_path[1], patient.data_dir_path, model_path[0], model=model
             ) # model_path, infer_example_dir, inference_modes (used for this model)
             segmentation_results.append((model_path[0], segmentation_result))
         patient.set_segmentation_result(segmentation_results)
         patient.prepare_dicom_seg()
         patient.upload_dicom_seg()
-        to_save.append(patient)
-    save_new_patients(to_save)
+        save_new_patients([patient])
+        patient.delete_temp()
+    #     to_save.append(patient)
+    # save_new_patients(to_save)
 
 
 def main():
@@ -469,8 +489,7 @@ def main():
             print("Waiting...")
             time.sleep(poll_interval_seconds)
         except Exception as e:
-            print(e)
-
+            print(e, f'traceback: ',*sys.exc_info())
 
 if __name__ == "__main__":
     main()
