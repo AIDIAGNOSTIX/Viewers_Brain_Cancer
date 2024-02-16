@@ -1,7 +1,6 @@
 import pickle
 import requests
 import numpy as np
-from torch import inf, inference_mode
 import pydicom
 import os
 import sys
@@ -23,14 +22,8 @@ from pydicom.sequence import Sequence
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "../../../")))
 from CancerDetection.scripts.infer import infer as perform_segmentation
+from params import orthanc_url, previous_patients_file, previous_patients_folder, poll_interval_seconds
 
-# Configuration
-orthanc_url = "http://localhost:8042"
-previous_patients_file = os.path.join(
-    os.path.dirname(__file__), "previous_patients_restrctured.json"
-)
-previous_patients_folder = os.path.join(os.path.dirname(__file__), "previous_patients")
-poll_interval_seconds = 5  # Check every 5 seconds
 model = None
 
 class Patient:
@@ -41,7 +34,7 @@ class Patient:
         self.data_dir_path = None
         self.data_path = None
         self.reference_dicom_dir_paths = []
-        self.save_if_ok = True
+        self.save = True
         self.series = []
         self.get_all_series()
         self.inferred = self.contains_seg()
@@ -99,7 +92,7 @@ class Patient:
         if self.inferred:
             return False
         else:
-            self.save_if_ok = False
+            self.save = False
             return True
 
     def get_patient_info(self):
@@ -287,7 +280,7 @@ def save_new_patients(patients):
 
     # Update the data with new patients
     for patient in patients:
-        if not patient.save_if_ok:
+        if not patient.save:
             continue
         # Serialize and save each patient object
         patient_obj_name = f"patient_{patient.id}.pkl"
@@ -406,7 +399,7 @@ def subtract_patients(current_patients, previous_patients):
 
 def mark_for_saving(new_patients):
     for patient in new_patients:
-        patient.save_if_ok = True
+        patient.save = True
 
 
 def list_new_patients():
