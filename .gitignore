@@ -47,3 +47,4 @@ platform/app/.recipes/OpenResty-Orthanc/logs/*
 .vs
 orthanc_up.log.save
 orthanc_up.log
+*.log
