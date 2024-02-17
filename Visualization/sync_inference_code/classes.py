@@ -3,6 +3,7 @@ import numpy as np
 import pydicom
 import os
 import shutil
+import traceback
 
 import pydicom_seg
 import SimpleITK as sitk
@@ -145,7 +146,12 @@ class Patient:
                 # Check if the mode is not already in final_segmentation_results
                 if inference_mode not in self.final_segmentation_results:
                     # Add the first occurrence of this mode to the dictionary
-                    self.final_segmentation_results[inference_mode] = result[1]
+                    try:
+                        self.final_segmentation_results[inference_mode] = result[1]
+                    except Exception as e:
+                        print(f'An error occurred: {e}')
+                        traceback.print_exc()
+                        continue
 
     def get_segmentation_result_per_mode(self, mode):
         return self.final_segmentation_results[mode]
