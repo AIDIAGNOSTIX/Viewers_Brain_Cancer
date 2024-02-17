@@ -70,16 +70,46 @@ class Patient:
             nifti_img = nib.Nifti1Image(series.data, affine=np.eye(4))
             # Save the NIfTI image as a .nii.gz file
             nifti_img.to_filename(series_path)
-            reference_dicom_dir_path = get_dicom_reference(series.id)
+            reference_dicom_dir_path = self.get_dicom_reference(series.id)
             self.reference_dicom_dir_paths.append(
                 (series.mode, reference_dicom_dir_path)
             )
 
+    def get_dicom_reference(self, series_id):
+        output_dir_path = tempfile.mkdtemp()
+        # Ensure the output directory exists
+        os.makedirs(output_dir_path, exist_ok=True)
+        self.to_be_deleted.append(output_dir_path)
+
+        # Get the list of instances in the series
+        response = requests.get(f"{orthanc_url}/series/{series_id}/instances")
+        if response.status_code != 200:
+            print("Error fetching series instances")
+            return
+
+        instances = response.json()
+        # Download a reference instance
+        for i, instance in enumerate(instances):
+            instance_id = instance["ID"]
+            dicom_response = requests.get(
+                f"{orthanc_url}/instances/{instance_id}/file", stream=True
+            )
+
+            if dicom_response.status_code == 200:
+                # output_file_path = os.path.join(output_dir_path, f"{instance_id}.dcm")
+                output_file_path = os.path.join(output_dir_path, f"{i}.dcm")
+                with open(output_file_path, "wb") as f:
+                    f.write(dicom_response.content)
+            else:
+                print(f"Error downloading instance {instance_id}")
+        return output_dir_path
+
     def validate(self):  # do not run if seg already exists for patient (for now)
         if self.inferred:
+            self.save = False
             return False
         else:
-            self.save = False
+            self.save = True # set before just making sure
             return True
 
     def get_patient_info(self):
