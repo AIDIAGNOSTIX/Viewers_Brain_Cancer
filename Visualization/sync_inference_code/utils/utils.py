@@ -16,23 +16,41 @@ def get_models_dict():
 
 
 # in the future use inference modes to select most suitable model for inference
+# def get_models_paths(inference_modes, models_dict):
+#     models_paths = []
+#     for mode in inference_modes:
+#         models_paths.append(([mode], models_dict[mode].strip()))
+#     if "flair" in inference_modes and "t2" in inference_modes:
+#         models_paths.append((["flair", "t2"], models_dict["flair_t2"].strip()))
+#         if "t1" in inference_modes:
+#             models_paths.append(
+#                 (["flair", "t1", "t2"], models_dict["flair_t1_t2"].strip())
+#             )
+#             if "t1ce" in inference_modes:
+#                 models_paths.append(
+#                     (
+#                         ["flair", "t1ce", "t1", "t2"],
+#                         models_dict["flair_t1ce_t1_t2"].strip(),
+#                     )
+#                 )
+#     return models_paths
 def get_models_paths(inference_modes, models_dict):
     models_paths = []
     for mode in inference_modes:
         models_paths.append(([mode], models_dict[mode].strip()))
-    if "flair" in inference_modes and "t2" in inference_modes:
+    if "flair" in inference_modes or "t2" in inference_modes:
         models_paths.append((["flair", "t2"], models_dict["flair_t2"].strip()))
-        if "t1" in inference_modes:
-            models_paths.append(
-                (["flair", "t1", "t2"], models_dict["flair_t1_t2"].strip())
+    if  "flair" in inference_modes or "t2" in inference_modes or "t1" in inference_modes:
+        models_paths.append(
+            (["flair", "t1", "t2"], models_dict["flair_t1_t2"].strip())
+        )
+    if "flair" in inference_modes or "t2" in inference_modes or "t1" in inference_modes or "t1ce" in inference_modes:
+        models_paths.append(
+            (
+                ["flair", "t1ce", "t1", "t2"],
+                models_dict["flair_t1ce_t1_t2"].strip(),
             )
-            if "t1ce" in inference_modes:
-                models_paths.append(
-                    (
-                        ["flair", "t1ce", "t1", "t2"],
-                        models_dict["flair_t1ce_t1_t2"].strip(),
-                    )
-                )
+        )
     return models_paths
 
 
