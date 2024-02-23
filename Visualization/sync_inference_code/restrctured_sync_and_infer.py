@@ -90,7 +90,7 @@ def main():
     print(f"Time to initialize model is {ctime()-st}")
     while True:
         try:
-            process_new_patients(cancer_segmentation, save_history=False)
+            process_new_patients(cancer_segmentation, save_history=True)
             print("Waiting...")
             time.sleep(poll_interval_seconds)
         except Exception as e:
