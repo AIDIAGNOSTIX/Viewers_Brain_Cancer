@@ -26,6 +26,7 @@ class Patient:
         self.series = []
         self.get_all_series()
         self.inferred = self.contains_seg()
+        self.correct_order = ["flair", "t1ce", "t1", "t2"]
         self.inference_modes = []
         self.segmentation_results = []
         self.dcm_seg_paths = []
@@ -120,6 +121,7 @@ class Patient:
         for series in self.series:
             self.inference_modes.append(series.mode)
         self.inference_modes = list(set(self.inference_modes))
+        self.inference_modes = sorted(self.inference_modes, key=lambda x: self.correct_order.index(x) if x in self.correct_order else len(self.correct_order))
         return self.inference_modes
 
     def set_segmentation_result(self, results):
@@ -139,20 +141,72 @@ class Patient:
         # the result of this function is the final segmentation result for each of the main inference modes (single existing modes)
         # and should be the result of the merging policies to be added after models training
         self.final_segmentation_results = {}
-        for result in self.segmentation_results:
-            inference_mode = "_".join(result[0])
-            # This part is only temporarily till models training is finished then we implement a merging policy
-            if inference_mode in self.inference_modes:
-                # Check if the mode is not already in final_segmentation_results
-                if inference_mode not in self.final_segmentation_results:
-                    # Add the first occurrence of this mode to the dictionary
-                    try:
-                        self.final_segmentation_results[inference_mode] = result[1]
-                    except Exception as e:
-                        print(f'An error occurred: {e}')
-                        traceback.print_exc()
-                        continue
+        # for result in self.segmentation_results:
+        #     inference_mode = "_".join(result[0])
+        #     # This part is only temporarily till models training is finished then we implement a merging policy
+        #     if inference_mode in self.inference_modes:
+        #         # Check if the mode is not already in final_segmentation_results
+        #         if inference_mode not in self.final_segmentation_results:
+        #             # Add the first occurrence of this mode to the dictionary
+        #             try:
+        #                 self.final_segmentation_results[inference_mode] = result[1]
+        #             except Exception as e:
+        #                 print(f'An error occurred: {e}')
+        #                 traceback.print_exc()
+        #                 continue
+        # largest_seg, largest_sum = max(((seg_mask, np.sum(seg_mask)) for _, seg_mask in self.segmentation_results), key=lambda x: x[1])
+        largest_seg, seg_model_name = self.find_largest_seg(self.segmentation_results)
+        print(f'largest segmentation was from model: {seg_model_name}')
+        for mode in self.inference_modes:
+            self.final_segmentation_results[mode] = largest_seg
 
+    def find_largest_seg(self, segmentation_results):
+        # Initialize the largest sum and the corresponding segmentation mask
+        largest_sum = -1
+        largest_seg = None
+        seg_model_name = None
+        # Iterate through the segmentation results to find the mask with the largest sum
+        for model_name, seg_mask in segmentation_results:
+            current_sum = np.sum(seg_mask>0)  # Calculate the sum of the current mask
+            if current_sum > largest_sum:
+                largest_sum = current_sum
+                largest_seg = seg_mask  # Update the mask with the largest sum
+                seg_model_name = model_name
+        return largest_seg, seg_model_name
+
+    def combine_masks(self, masks):
+        """
+        Combine multiple segmentation masks using a voting algorithm.
+
+        Parameters:
+        - masks (list of numpy.ndarray): A list of 2D arrays where each element represents a segmentation mask.
+
+        Returns:
+        - numpy.ndarray: The combined segmentation mask.
+        """
+        # Stack all masks along a new dimension to create a 3D array (height, width, num_masks)
+        stacked_masks = np.stack(masks, axis=-1)
+
+        # Initialize the combined mask with the values from the first mask
+        combined_mask = masks[0].copy()
+
+        # Iterate through each unique label in the masks, excluding the background (0)
+        for label in np.unique(stacked_masks)[1:]:
+            # Create a mask for the current label across all masks
+            label_mask = (stacked_masks == label)
+
+            # Count how many times each pixel is assigned the current label
+            label_counts = np.sum(label_mask, axis=-1)
+
+            # Find pixels where the current label has the majority vote
+            # Note: This also covers the case where the vote is equal and defaults to the first mask,
+            # as those pixels will not be updated in the combined mask
+            majority_vote = label_counts > (stacked_masks.shape[-1] / 2)
+
+            # Update the combined mask with the current label where it has the majority vote
+            combined_mask[majority_vote] = label
+
+        return combined_mask
     def get_segmentation_result_per_mode(self, mode):
         return self.final_segmentation_results[mode]
 
