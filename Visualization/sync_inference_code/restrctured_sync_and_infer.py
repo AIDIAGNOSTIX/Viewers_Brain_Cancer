@@ -9,7 +9,7 @@ from params import poll_interval_seconds
 from utils.utils import get_models_dict, get_models_paths, save_new_patients, list_new_patients
 from time import time as ctime
 
-def process_new_patients(cancer_segmentation):
+def process_new_patients(cancer_segmentation, save_history=True):
     st_tot = ctime()
     for patient in list_new_patients():
         try:
@@ -72,7 +72,8 @@ def process_new_patients(cancer_segmentation):
             patient.set_segmentation_result(segmentation_results)
             patient.prepare_dicom_seg()
             patient.upload_dicom_seg()
-            save_new_patients([patient])
+            if save_history==True:
+                save_new_patients([patient])
             patient.delete_temp()
             print(f"Time took to process patient: {patient.id} is: {ctime()-st}")
         except Exception as e:
@@ -86,10 +87,10 @@ def main():
     # This script could be scheduled to run at regular intervals
     st = ctime()
     cancer_segmentation = CancerSegmentation()
-    print(f"Time to initialize model with GPU is {ctime()-st}")
+    print(f"Time to initialize model is {ctime()-st}")
     while True:
         try:
-            process_new_patients(cancer_segmentation)
+            process_new_patients(cancer_segmentation, save_history=False)
             print("Waiting...")
             time.sleep(poll_interval_seconds)
         except Exception as e:
