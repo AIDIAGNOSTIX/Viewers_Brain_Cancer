@@ -48,7 +48,7 @@ function _getDisplaySetsFromSeries(instances, servicesManager, extensionManager)
     sopClassUids,
     instance,
     instances: [instance],
-    wadoRoot,
+    wadoRoot: wadoRoot || 'dicom-web',
     wadoUriRoot,
     wadoUri,
     isOverlayDisplaySet: true,
