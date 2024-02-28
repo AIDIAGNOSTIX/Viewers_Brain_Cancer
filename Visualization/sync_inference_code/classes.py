@@ -72,12 +72,13 @@ class Patient:
             nifti_img = nib.Nifti1Image(series.data, affine=np.eye(4))
             # Save the NIfTI image as a .nii.gz file
             nifti_img.to_filename(series_path)
-            reference_dicom_dir_path = self.get_dicom_reference(series.id)
+            reference_dicom_dir_path = self.get_dicom_reference(series)
             self.reference_dicom_dir_paths.append(
                 (series.mode, reference_dicom_dir_path)
             )
 
-    def get_dicom_reference(self, series_id):
+    def get_dicom_reference(self, series):
+        series_id = series.id
         output_dir_path = tempfile.mkdtemp()
         # Ensure the output directory exists
         os.makedirs(output_dir_path, exist_ok=True)
@@ -104,6 +105,7 @@ class Patient:
                     f.write(dicom_response.content)
             else:
                 print(f"Error downloading instance {instance_id}")
+        series.dir = output_dir_path
         return output_dir_path
 
     def validate(self):  # do not run if seg already exists for patient (for now)
@@ -270,10 +272,12 @@ class Study:
         self.id = study_id
         self.info = self.get_study_info()
         self.series = [Series(s) for s in self.info["Series"]]
+        self.pad_series()
 
     def get_study_info(self):
         return requests.get(f"{orthanc_url}/studies/{self.id}").json()
-
+    def pad_series(self):
+        pass
 
 class Series:
     def __init__(self, series_id):
@@ -288,6 +292,7 @@ class Series:
         self.mode = self.get_familiar_mode(
             self.info["MainDicomTags"]["SeriesDescription"]
         )
+        self.dir = None
 
     def get_series_info(self):
         return requests.get(f"{orthanc_url}/series/{self.id}").json()
