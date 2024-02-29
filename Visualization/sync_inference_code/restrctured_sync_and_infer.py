@@ -56,7 +56,7 @@ def process_new_patients(cancer_segmentation, save_history=True):
             if not infer:
                 patient.delete_temp()
                 continue
-            patient.download()
+            patient.download_and_preprocess()
 
             # which modes to infer with (check internal variables calculated
             # during validate and see which modes are gonna be used for inference)
