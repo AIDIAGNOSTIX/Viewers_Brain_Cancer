@@ -109,7 +109,7 @@ class Patient:
         for image_name, image in subject.items():
             if image_name in original_sizes:
                 original_size = original_sizes[image_name]
-                current_size = image.shape #[1:]  # Exclude batch dimension
+                current_size = image.shape[1:]  # Exclude batch dimension
 
                 # Calculate cropping margins if the current size is larger than the original
                 if all(cs >= os for cs, os in zip(current_size, original_size)):
@@ -227,7 +227,8 @@ class Patient:
             self.segmentation_results.append(
                 (
                     result[0],
-                    np.transpose(result[1].copy()[0], (2, 0, 1)).astype(np.uint8),
+                    # np.transpose(result[1].copy()[0], (2, 0, 1)).astype(np.uint8),
+                    result[1].copy()[0].astype(np.uint8),
                 )
             )  # (mode, result)
         self.inferred = True
@@ -259,13 +260,15 @@ class Patient:
         return largest_seg, seg_model_name
 
     def get_segmentation_result_per_mode(self, mode):
-        subject_seg_dict  = {}
-        for mode in list(self.final_segmentation_results.keys()):
-            subject_seg_dict[mode] = tio.ScalarImage(tensor=np.transpose(self.final_segmentation_results[mode],(1,2,0)).expand_dims(0))
-        self.subject_seg = tio.Subject(**subject_seg_dict)
         if self.crop_inverted==False:
+            subject_seg_dict  = {}
+            for mode in list(self.final_segmentation_results.keys()):
+                subject_seg_dict[mode] = tio.ScalarImage(tensor=np.expand_dims(self.final_segmentation_results[mode],0))
+            self.subject_seg = tio.Subject(**subject_seg_dict)
             self.subject_seg = self.invert_crop_or_pad(self.subject_seg, self.subject_original_sizes)
-        return self.subject_seg[mode]
+            for key in list(self.final_segmentation_results):
+                self.final_segmentation_results[key] = np.transpose(self.subject_seg[key].data[0], (2, 1, 0))
+        return self.final_segmentation_results[mode]
 
     # TODO : MAKE THIS SEPERATE FOR EACH MODE'S OUTPUT
     def create_dicom_seg(self, reference_dicom_dir_path):
