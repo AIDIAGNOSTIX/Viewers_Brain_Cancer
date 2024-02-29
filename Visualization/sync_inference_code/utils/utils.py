@@ -4,51 +4,52 @@ import json
 
 from params import orthanc_url, previous_patients_file, models_dict_path
 from classes import Patient
-
+import re
 model = None
 
+
+# def get_models_dict():
+#     global models_dict_path
+#     with open(models_dict_path, "r") as json_file:
+#         models_dict = json.load(json_file)
+#     return models_dict
 
 def get_models_dict():
     global models_dict_path
     with open(models_dict_path, "r") as json_file:
         models_dict = json.load(json_file)
-    return models_dict
 
+    # Enhanced models dict to include the dice average score
+    enhanced_models_dict = {}
 
-# in the future use inference modes to select most suitable model for inference
-# def get_models_paths(inference_modes, models_dict):
-#     models_paths = []
-#     for mode in inference_modes:
-#         models_paths.append(([mode], models_dict[mode].strip()))
-#     if "flair" in inference_modes and "t2" in inference_modes:
-#         models_paths.append((["flair", "t2"], models_dict["flair_t2"].strip()))
-#         if "t1" in inference_modes:
-#             models_paths.append(
-#                 (["flair", "t1", "t2"], models_dict["flair_t1_t2"].strip())
-#             )
-#             if "t1ce" in inference_modes:
-#                 models_paths.append(
-#                     (
-#                         ["flair", "t1ce", "t1", "t2"],
-#                         models_dict["flair_t1ce_t1_t2"].strip(),
-#                     )
-#                 )
-#     return models_paths
+    for model_name, path in models_dict.items():
+        # Extracting the dice average score using regex
+        dice_avg_match = re.search(r'dice_avg_([0-9.]+)', path)
+        if dice_avg_match:
+            dice_avg = float(dice_avg_match.group(1).rstrip('.')) # Removing any trailing periods
+        else:
+            dice_avg = None  # In case the dice_avg is not found in the path
+
+        # Storing both the path and the dice average score in the new dictionary
+        enhanced_models_dict[model_name] = {"path": path, "dice_avg": dice_avg}
+
+    return enhanced_models_dict
+
 def get_models_paths(inference_modes, models_dict):
     models_paths = []
     for mode in inference_modes:
-        models_paths.append(([mode], models_dict[mode].strip()))
+        models_paths.append(([mode], models_dict[mode]['path'].strip(), models_dict[mode]['dice_avg']))
     if "flair" in inference_modes or "t2" in inference_modes:
-        models_paths.append((["flair", "t2"], models_dict["flair_t2"].strip()))
+        models_paths.append((["flair", "t2"], models_dict["flair_t2"]['path'].strip(), models_dict["flair_t2"]['dice_avg']))
     if  "flair" in inference_modes or "t2" in inference_modes or "t1" in inference_modes:
         models_paths.append(
-            (["flair", "t1", "t2"], models_dict["flair_t1_t2"].strip())
+            (["flair", "t1", "t2"], models_dict["flair_t1_t2"]['path'].strip(), models_dict["flair_t1_t2"]['dice_avg'])
         )
     if "flair" in inference_modes or "t2" in inference_modes or "t1" in inference_modes or "t1ce" in inference_modes:
         models_paths.append(
             (
                 ["flair", "t1ce", "t1", "t2"],
-                models_dict["flair_t1ce_t1_t2"].strip(),
+                models_dict["flair_t1ce_t1_t2"]['path'].strip(), models_dict["flair_t1ce_t1_t2"]['dice_avg'],
             )
         )
     return models_paths

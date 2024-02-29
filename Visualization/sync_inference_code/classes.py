@@ -4,6 +4,7 @@ import pydicom
 import os
 import shutil
 import traceback
+import torch
 
 import pydicom_seg
 import SimpleITK as sitk
@@ -223,41 +224,39 @@ class Patient:
         return self.inference_modes
 
     def set_segmentation_result(self, results):
-        for result in results:
-            self.segmentation_results.append(
-                (
-                    result[0],
-                    # np.transpose(result[1].copy()[0], (2, 0, 1)).astype(np.uint8),
-                    result[1].copy()[0].astype(np.uint8),
-                )
-            )  # (mode, result)
+        self.segmentation_results = results.copy() # (mode, result, dice_avg) for each result in results
         self.inferred = True
-        # implement this where you vote on the final result using all results, and set final segmentation for each existing mode
+        # vote on the final result using all results, and set final segmentation for each existing mode
         self.combine_results()
 
-    def combine_results(self): # TODO: Modify after implementing merging policy
+    def combine_results(self):
         # implement this where you vote on the final result using all results, but for now just use mode to get each mode's result
         # the result of this function is the final segmentation result for each of the main inference modes (single existing modes)
         # and should be the result of the merging policies to be added after models training
         self.final_segmentation_results = {}
-        largest_seg, seg_model_name = self.find_largest_seg(self.segmentation_results)
-        print(f'largest segmentation was from model: {seg_model_name}')
-        for mode in self.inference_modes:
-            self.final_segmentation_results[mode] = largest_seg
+        mode_list, seg_prob_list, dice_avg_list = map(list, zip(*self.segmentation_results))
+        seg_prob_list_tensors = [torch.tensor(item) for item in seg_prob_list if item is not None]
+        seg_probs = torch.stack(seg_prob_list_tensors) if seg_prob_list_tensors else None  # Stack them to create a single tensor of shape [N, *shape_of_each_tensor]
 
-    def find_largest_seg(self, segmentation_results):
-        # Initialize the largest sum and the corresponding segmentation mask
-        largest_sum = -1
-        largest_seg = None
-        seg_model_name = None
-        # Iterate through the segmentation results to find the mask with the largest sum
-        for model_name, seg_mask in segmentation_results:
-            current_sum = np.sum(seg_mask>0)  # Calculate the sum of the current mask
-            if current_sum > largest_sum:
-                largest_sum = current_sum
-                largest_seg = seg_mask  # Update the mask with the largest sum
-                seg_model_name = model_name
-        return largest_seg, seg_model_name
+        # Assuming dice_avg_list contains the dice scores and you've computed confidence_scores as shown
+        cleaned_dice_avg_list = [item if item is not None else 0 for item in dice_avg_list]
+        confidence_scores = torch.nn.functional.softmax(torch.tensor(cleaned_dice_avg_list, dtype=torch.float), dim=0)
+
+        # Reshape confidence_scores to be able to multiply it with seg_probs
+        confidence_scores = confidence_scores.view(-1, 1, 1, 1, 1)  # Adjust the shape according to the dimension of your seg_probs
+
+        # Compute the weighted sum of segmentation probabilities
+        final_seg_prob = torch.sum(seg_probs * confidence_scores, dim=0).detach().numpy()
+        final_seg_prob = (final_seg_prob > 0.5).astype(np.int8)
+        # Initialize the output segmentation
+        seg_out = np.zeros((final_seg_prob.shape[1], final_seg_prob.shape[2], final_seg_prob.shape[3]))
+        # Assign labels to the segmentation
+        seg_out[final_seg_prob[1] == 1] = 2  # Whole tumor
+        seg_out[final_seg_prob[2] == 1] = 3  # Enhancing tumor
+        seg_out[final_seg_prob[0] == 1] = 1  # Tumor core
+
+        for mode in self.inference_modes:
+            self.final_segmentation_results[mode] = seg_out.astype(np.uint8)
 
     def get_segmentation_result_per_mode(self, mode):
         if self.crop_inverted==False:
@@ -293,6 +292,8 @@ class Patient:
         try:
             dcm_seg = self.writer.write(segmentation_image, source_images)
         except Exception as e:
+            print(f'An error occurred: {e}')
+            traceback.print_exc()
             print(f'segmentation_image sum: {self.get_segmentation_result_per_mode(mode).sum()}')
             return None
 
