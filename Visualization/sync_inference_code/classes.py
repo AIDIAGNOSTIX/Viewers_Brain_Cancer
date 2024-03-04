@@ -234,30 +234,56 @@ class Patient:
         # the result of this function is the final segmentation result for each of the main inference modes (single existing modes)
         # and should be the result of the merging policies to be added after models training
         self.final_segmentation_results = {}
-        mode_list, seg_prob_list, dice_avg_list = map(list, zip(*self.segmentation_results))
-        seg_prob_list_tensors = [torch.tensor(item) for item in seg_prob_list if item is not None]
-        seg_probs = torch.stack(seg_prob_list_tensors) if seg_prob_list_tensors else None  # Stack them to create a single tensor of shape [N, *shape_of_each_tensor]
+        # mode_list, seg_prob_list, dice_avg_list = map(list, zip(*self.segmentation_results))
+        # seg_prob_list_tensors = [torch.tensor(item) for item in seg_prob_list if item is not None]
+        # seg_probs = torch.stack(seg_prob_list_tensors) if seg_prob_list_tensors else None  # Stack them to create a single tensor of shape [N, *shape_of_each_tensor]
 
-        # Assuming dice_avg_list contains the dice scores and you've computed confidence_scores as shown
-        cleaned_dice_avg_list = [item if item is not None else 0 for item in dice_avg_list]
-        confidence_scores = torch.nn.functional.softmax(torch.tensor(cleaned_dice_avg_list, dtype=torch.float), dim=0)
+        # cleaned_dice_avg_list = [item if item is not None else 0 for item in dice_avg_list]
+        # confidence_scores = torch.nn.functional.softmax(torch.tensor(cleaned_dice_avg_list, dtype=torch.float), dim=0)
 
-        # Reshape confidence_scores to be able to multiply it with seg_probs
-        confidence_scores = confidence_scores.view(-1, 1, 1, 1, 1)  # Adjust the shape according to the dimension of your seg_probs
+        # # Reshape confidence_scores to be able to multiply it with seg_probs
+        # confidence_scores = confidence_scores.view(-1, 1, 1, 1, 1)  # Adjust the shape according to the dimension of your seg_probs
 
-        # Compute the weighted sum of segmentation probabilities
-        final_seg_prob = torch.sum(seg_probs * confidence_scores, dim=0).detach().numpy()
-        final_seg_prob = (final_seg_prob > 0.5).astype(np.int8)
-        # Initialize the output segmentation
-        seg_out = np.zeros((final_seg_prob.shape[1], final_seg_prob.shape[2], final_seg_prob.shape[3]))
-        # Assign labels to the segmentation
-        seg_out[final_seg_prob[1] == 1] = 2  # Whole tumor
-        seg_out[final_seg_prob[2] == 1] = 3  # Enhancing tumor
-        seg_out[final_seg_prob[0] == 1] = 1  # Tumor core
+        # # Compute the weighted sum of segmentation probabilities
+        # final_seg_prob = torch.sum(seg_probs * confidence_scores, dim=0).detach().numpy()
+        # final_seg_prob = (final_seg_prob > 0.5).astype(np.int8)
+        # # Initialize the output segmentation
+        # seg_out = np.zeros((final_seg_prob.shape[1], final_seg_prob.shape[2], final_seg_prob.shape[3]))
+        # # Assign labels to the segmentation
+        # seg_out[final_seg_prob[1] == 1] = 2  # Whole tumor
+        # seg_out[final_seg_prob[2] == 1] = 3  # Enhancing tumor
+        # seg_out[final_seg_prob[0] == 1] = 1  # Tumor core
 
-        for mode in self.inference_modes:
-            self.final_segmentation_results[mode] = seg_out.astype(np.uint8)
+        # for mode in self.inference_modes:
+        #     self.final_segmentation_results[mode] = seg_out.astype(np.uint8)
 
+        for current_mode in self.inference_modes:
+            # Filter lists based on the current mode
+            filtered_seg_prob_list = [seg_prob for mode, seg_prob, _ in self.segmentation_results if current_mode in mode]
+            filtered_dice_avg_list = [dice_avg for mode, _, dice_avg in self.segmentation_results if current_mode in mode]
+
+            # Convert to tensors and compute as before
+            seg_prob_list_tensors = [torch.tensor(item) for item in filtered_seg_prob_list if item is not None]
+            seg_probs = torch.stack(seg_prob_list_tensors) if seg_prob_list_tensors else None
+
+            cleaned_dice_avg_list = [item if item is not None else 0 for item in filtered_dice_avg_list]
+            confidence_scores = torch.nn.functional.softmax(torch.tensor(cleaned_dice_avg_list, dtype=torch.float), dim=0)
+
+            if seg_probs is not None:
+                # Reshape confidence_scores to be able to multiply it with seg_probs
+                confidence_scores = confidence_scores.view(-1, 1, 1, 1, 1)
+
+                final_seg_prob = torch.sum(seg_probs * confidence_scores, dim=0).detach().numpy()
+                final_seg_prob = (final_seg_prob > 0.5).astype(np.int8)
+
+                # Initialize the output segmentation
+                seg_out = np.zeros((final_seg_prob.shape[1], final_seg_prob.shape[2], final_seg_prob.shape[3]))
+
+                # Assign labels to the segmentation
+                seg_out[final_seg_prob[1] == 1] = 2  # Whole tumor
+                seg_out[final_seg_prob[2] == 1] = 3  # Enhancing tumor
+                seg_out[final_seg_prob[0] == 1] = 1  # Tumor core
+                self.final_segmentation_results[current_mode] = seg_out.copy().astype(np.uint8)
     def get_segmentation_result_per_mode(self, mode):
         if self.crop_inverted==False:
             subject_seg_dict  = {}
