@@ -16,6 +16,8 @@ def process_new_patients(cancer_segmentation, save_history=True):
             st = ctime()
             infer = patient.validate()
             if not infer:
+                if save_history==True:
+                    save_new_patients([patient])
                 patient.delete_temp()
                 continue
             patient.download_and_preprocess()

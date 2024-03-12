@@ -207,10 +207,10 @@ class Patient:
 
     def validate(self):  # do not run if seg already exists for patient (for now)
         if self.inferred:
-            self.save = False
+            # self.save = False
             return False
         else:
-            self.save = True # set before just making sure
+            # self.save = True # set before just making sure
             return True
 
     def get_patient_info(self):
