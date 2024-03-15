@@ -15,8 +15,8 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb',
       configuration: {
-        friendlyName: 'Orthanc Server',
-        name: 'Orthanc',
+        friendlyName: 'Orthanc-Keycloak Server',
+        name: 'Orthanc-Keycloak',
         wadoUriRoot: 'http://127.0.0.1/pacs/dicom-web',
         qidoRoot: 'http://127.0.0.1/pacs/dicom-web',
         wadoRoot: 'http://127.0.0.1/pacs/dicom-web',
