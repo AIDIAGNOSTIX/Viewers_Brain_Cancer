@@ -12,9 +12,9 @@ import io
 import tempfile
 import uuid
 import nibabel as nib
-from params import orthanc_url
+from params import orthanc_url, auth
 import torchio as tio
-
+# from utils.upload_to_orthanc import upload_dicom_directory
 class Patient:
     def __init__(self, patient_id):
         self.id = patient_id
@@ -42,7 +42,25 @@ class Patient:
         self.writer = pydicom_seg.MultiClassWriter(template=self.template)
 
         self.reader = sitk.ImageSeriesReader()
+    # def delete_patient(self, seg_only=True):
+    #     for series in self.series:
+    #         modality = series.info.get('MainDicomTags', {}).get('Modality')
+    #         if seg_only:
+    #             if modality == 'SEG':
+    #                 self.delete_series(series.id)
+    #         else:
+    #             patient_short_id = self.info.get('MainDicomTags', {}).get('PatientID')
+    #             if patient_short_id == '00492':
+    # #                 self.delete_series(series.id)
 
+    # def delete_series(self, series_id):
+    #     series_url = f"{orthanc_url}/series/{series_id}"
+    #     print(f"Deleting series {series_id} with modality 'SEG'")
+    #     delete_response = requests.delete(series_url, auth=auth)
+    #     if delete_response.status_code == 200:
+    #         print(f"Series {series_id} deleted successfully")
+    #     else:
+    #         print(f"Failed to delete series {series_id}")
     def delete_temp(self):
         for tmp_dir in self.to_be_deleted:
             shutil.rmtree(tmp_dir)
@@ -148,7 +166,7 @@ class Patient:
 
     def save_transformed_subject(self, transformed_subject):
         """
-        Save the transformed subject images to disk.
+        Save the transformed subject images to disk as .nii.gz
 
         Parameters:
         - transformed_subject: A transformed TorchIO Subject.
@@ -168,11 +186,42 @@ class Patient:
             )
             series.save(series_path)
 
+    # def save_preprocessed_images_to_dcm(self, transformed_subject):
+    #     """
+    #     Save the transformed subject images to disk as .dcm
+
+    #     Parameters:
+    #     - transformed_subject: A transformed TorchIO Subject.
+    #     """
+    #     # Create a temporary directory
+    #     output_directory = tempfile.mkdtemp()
+    #     self.to_be_deleted.append(output_directory)
+
+    #     for modality, series in transformed_subject.items():
+    #         # Assuming the data is 3D, add code here if 4D (e.g., time series)
+    #         data = series.data.numpy().squeeze().transpose((2,0,1))  # Remove channels dim, adjust as necessary
+    #         # affine = series.affine
+    #         for i in range(data.shape[0]):  # Iterate over the slices
+    #             slice_data = data[i, :, :]
+    #             # Convert your slice to a pydicom dataset (modify this part based on your original DICOM metadata)
+    #             series_dir = str(series.path)
+    #             try:
+    #                 ds = pydicom.dcmread(os.path.join(series_dir,sorted(os.listdir(series_dir))[i]))  # Assuming 'path' exists and points to a DICOM file used as a template
+    #             except:
+    #                 ds = pydicom.dcmread(os.path.join(series_dir,sorted(os.listdir(series_dir))[-1]))  # Assuming 'path' exists and points to a DICOM file used as a template
+    #             ds.PixelData = slice_data.tobytes()
+    #             ds.save_as(os.path.join(output_directory, f"{modality}_{i}.dcm"))
+    #     return output_directory
+
     def download_and_preprocess(self):
         self.subject = self.load_subject()
         max_dimensions = self.find_max_dimensions(self.subject)
         self.subject = self.apply_transformations(self.subject, max_dimensions)
         self.save_transformed_subject(self.subject)
+        # output_directory = self.save_preprocessed_images_to_dcm(self.subject)
+        # self.delete_patient(seg_only=False)
+        # upload_dicom_directory(output_directory)
+        return 0
 
     def get_dicom_reference(self, series):
         series_id = series.id

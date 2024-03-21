@@ -29,6 +29,8 @@ sudo lsof -i :3000 | grep LISTEN | awk '{print $2}' | xargs -r sudo kill -9
 sudo lsof -i :5000 | grep LISTEN | awk '{print $2}' | xargs -r sudo kill -9
 # close all processes in port 8042
 sudo lsof -i :8042 | grep LISTEN | awk '{print $2}' | xargs -r sudo kill -9
+# close all processes in port 9990
+sudo lsof -i :9990 | grep LISTEN | awk '{print $2}' | xargs -r sudo kill -9
 
 # Start viewer after launching orthanc server
 echo "Starting dev:orthanc..."

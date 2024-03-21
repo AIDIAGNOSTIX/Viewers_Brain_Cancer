@@ -12,16 +12,19 @@ def delete_series_if_modality_is_SEG(series_id):
     if response.status_code == 200:
         series_info = response.json()
         modality = series_info.get('MainDicomTags', {}).get('Modality')
-
         if modality == 'SEG':
-            print(f"Deleting series {series_id} with modality 'SEG'")
-            delete_response = requests.delete(series_url, auth=AUTH)
-            if delete_response.status_code == 200:
-                print(f"Series {series_id} deleted successfully")
-            else:
-                print(f"Failed to delete series {series_id}")
+            delete_series(series_id)
     else:
         print(f"Failed to get info for series {series_id}")
+
+def delete_series(series_id):
+    series_url = f"{ORTHANC_URL}/series/{series_id}"
+    print(f"Deleting series {series_id} with modality 'SEG'")
+    delete_response = requests.delete(series_url, auth=AUTH)
+    if delete_response.status_code == 200:
+        print(f"Series {series_id} deleted successfully")
+    else:
+        print(f"Failed to delete series {series_id}")
 
 def main():
     # Get all series
