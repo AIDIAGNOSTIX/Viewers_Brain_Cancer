@@ -1,6 +1,7 @@
 import requests
 import os
 import json
+import time
 
 from params import orthanc_url, previous_patients_file, models_dict_path
 from classes import Patient
@@ -150,4 +151,7 @@ def list_new_patients():
     current_patients_ids = get_all_patients_ids()
     new_patients_ids = subtract_patients_ids(current_patients_ids, previous_patients_ids)
     new_patients = get_patients(new_patients_ids)
+    if len(new_patients)>0:
+        print(f'Detected {len(new_patients)} new patients waiting 10s for upload to complete')
+        time.sleep(10)
     return new_patients

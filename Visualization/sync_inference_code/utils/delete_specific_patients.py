@@ -36,7 +36,7 @@ def delete_patient(patient, seg_only=True):
                 delete_series(series.id)
 def main():
     # Get all patients
-    patients_delete_list = ['00492', '00200']
+    patients_delete_list = ['00492']
     patients_ids = get_all_patients_ids()
     for patient_id in patients_ids:
         patient = Patient(patient_id)

@@ -5,7 +5,7 @@ import requests
 orthanc_server = 'http://localhost:8042'
 
 # The directory containing the DICOM files organized by patient
-dicom_directory = '/mnt/sda/downloads/rsna-miccai-brain-tumor-radiogenomic-classification/test'
+dicom_directory = "/mnt/sda/downloads/rsna-miccai-brain-tumor-radiogenomic-classification/upload" #'/mnt/sda/downloads/rsna-miccai-brain-tumor-radiogenomic-classification/test'
 # Function to upload a single DICOM file to the Orthanc server
 def upload_dicom_file(dicom_file_path):
     with open(dicom_file_path, 'rb') as f:

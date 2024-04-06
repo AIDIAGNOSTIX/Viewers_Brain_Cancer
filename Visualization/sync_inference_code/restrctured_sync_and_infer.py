@@ -39,7 +39,7 @@ def process_new_patients(cancer_segmentation, save_history=True):
             if save_history==True:
                 save_new_patients([patient])
             patient.delete_temp()
-            print(f"Time took to process patient: {patient.id} is: {ctime()-st}")
+            print(f"Time took to process patient: {patient.short_id} is: {ctime()-st}")
         except Exception as e:
             print(f'An error occurred: {e}')
             traceback.print_exc()

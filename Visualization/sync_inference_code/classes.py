@@ -19,6 +19,7 @@ class Patient:
     def __init__(self, patient_id):
         self.id = patient_id
         self.info = self.get_patient_info()
+        self.short_id = self.info.get('MainDicomTags', {}).get('PatientID')
         self.studies = [Study(s) for s in self.info["Studies"]]
         self.data_dir_path = None
         self.data_path = None
@@ -92,8 +93,8 @@ class Patient:
                 (series.mode, reference_dicom_dir_path)
             )
             subject_dict[series.mode] = tio.ScalarImage(reference_dicom_dir_path)
-        self.subject = tio.Subject(**subject_dict)
-        return self.subject
+        subject = tio.Subject(**subject_dict)
+        return subject
 
     def find_max_dimensions(self, subject):
         """
@@ -138,6 +139,27 @@ class Patient:
                 # If the current size matches the original, no action is needed
         return subject
 
+    def invert_resample_and_to_canonical(self, subject_seg, subject):
+
+        self.crop_inverted = True
+        # Iterate over the images in subject_seg
+        original_subject_seg = subject_seg.copy()
+        for image_name, image in subject_seg.items():
+            if image_name in subject:
+                # Get the corresponding reference image from subject
+                reference_image = subject[image_name]
+                # Create the Resample transformation with the reference image
+                resample_1 = tio.Resample(1, image_interpolation='nearest')
+                # resample = tio.Resample(target=reference_image, image_interpolation='nearest')
+                resample = tio.Resample((reference_image.shape[1:], reference_image.affine), image_interpolation='bspline')
+
+                # Apply the resampling to the image
+                original_subject_seg[image_name] = resample(resample_1(image))
+            else:
+                # Handle the case where the image_name is not in the reference subject
+                print(f"Warning: {image_name} not found in reference subject. Skipping.")
+        return original_subject_seg
+
     def apply_transformations(self, subject, max_dimensions):
         """
         Apply transformations to the subject.
@@ -154,15 +176,35 @@ class Patient:
             for image_name, image in subject.items():
                 original_sizes[image_name] = image.shape[1:]  # Exclude batch dimension
             return original_sizes
+        def select_biggest_image(subject):
+            # Initialize variables to store the biggest image information
+            biggest_image_name = None
+            biggest_image_size = 0
+
+            # Iterate through each image in the subject
+            for image_name, image in subject.items():
+                # Calculate the size of the current image (number of voxels)
+                image_size = image.shape[1] * image.shape[2] * image.shape[3]
+
+                # If the current image is bigger than the biggest found so far, update the variables
+                if image_size > biggest_image_size:
+                    biggest_image_name = image_name
+                    biggest_image_size = image_size
+            return biggest_image_name
+
         self.subject_original_sizes = get_original_sizes(subject)
-        reference_image = next(iter(subject.values()), None)
-        transform = tio.Compose([
+        # reference_image = subject[select_biggest_image(subject)] #next(iter(subject.values()), None)
+        self.transform = tio.Compose([
             tio.ToCanonical(),  # Ensure all images are in RAS+ orientation first
             tio.Resample(1, image_interpolation='bspline'),
-            tio.Resample(reference_image, image_interpolation='nearest'),
-            tio.CropOrPad(max_dimensions),  # Standardize spatial shape
+            # tio.Resample((subject[select_biggest_image(subject)].shape[1:], subject[select_biggest_image(subject)].affine), image_interpolation='bspline'),
+            # tio.ToCanonical(),  # Ensure all images are in RAS+ orientation first
+            # tio.CropOrPad(max_dimensions),  # Standardize spatial shape
+            tio.Resample(select_biggest_image(subject), image_interpolation='nearest'),
+            # tio.ZNormalization(masking_method=tio.ZNormalization.mean),
+            # tio.RescaleIntensity((-1, 1)),
         ])
-        return transform(subject)
+        return self.transform(subject)
 
     def save_transformed_subject(self, transformed_subject):
         """
@@ -216,8 +258,8 @@ class Patient:
     def download_and_preprocess(self):
         self.subject = self.load_subject()
         max_dimensions = self.find_max_dimensions(self.subject)
-        self.subject = self.apply_transformations(self.subject, max_dimensions)
-        self.save_transformed_subject(self.subject)
+        self.subject_preprocessed = self.apply_transformations(self.subject, max_dimensions)
+        self.save_transformed_subject(self.subject_preprocessed)
         # output_directory = self.save_preprocessed_images_to_dcm(self.subject)
         # self.delete_patient(seg_only=False)
         # upload_dicom_directory(output_directory)
@@ -337,14 +379,18 @@ class Patient:
         if self.crop_inverted==False:
             subject_seg_dict  = {}
             for mode in list(self.final_segmentation_results.keys()):
-                subject_seg_dict[mode] = tio.ScalarImage(tensor=np.expand_dims(self.final_segmentation_results[mode],0))
+                subject_seg_dict[mode] = tio.LabelMap(tensor=np.expand_dims(self.final_segmentation_results[mode].copy(),0))
             self.subject_seg = tio.Subject(**subject_seg_dict)
+            # self.subject_seg.applied_transforms = self.subject_preprocessed.applied_transforms
+            # self.subject_seg_original_space = self.subject_seg.apply_inverse_transform()
             self.subject_seg = self.invert_crop_or_pad(self.subject_seg, self.subject_original_sizes)
+            # subject_seg_original_space = self.invert_resample_and_to_canonical(self.subject_seg, self.subject)
+            # self.subject_seg_original_space = self.invert_crop_or_pad(self.subject_seg_original_space.copy(), self.subject_original_sizes)
             for key in list(self.final_segmentation_results):
                 self.final_segmentation_results[key] = np.transpose(self.subject_seg[key].data[0], (2, 1, 0))
+                # self.final_segmentation_results[key] = np.transpose(self.subject_seg[key].data[0], (2, 1, 0))
         return self.final_segmentation_results[mode]
 
-    # TODO : MAKE THIS SEPERATE FOR EACH MODE'S OUTPUT
     def create_dicom_seg(self, reference_dicom_dir_path):
         mode, reference_dicom_dir_path = reference_dicom_dir_path
         temp_dir = tempfile.mkdtemp()
@@ -369,7 +415,7 @@ class Patient:
         except Exception as e:
             print(f'An error occurred: {e}')
             traceback.print_exc()
-            print(f'segmentation_image sum: {self.get_segmentation_result_per_mode(mode).sum()}')
+            print(f'segmentation_image sum: {self.get_segmentation_result_per_mode(mode).sum()} for mode: {mode}')
             return None
 
         # Save the DICOM SEG file
