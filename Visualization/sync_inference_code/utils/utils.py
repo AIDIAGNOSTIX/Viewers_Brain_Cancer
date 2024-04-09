@@ -151,3 +151,8 @@ def list_new_patients():
     new_patients_ids = subtract_patients_ids(current_patients_ids, previous_patients_ids)
     new_patients = get_patients(new_patients_ids)
     return new_patients
+
+def list_all_patients():
+    current_patients_ids = get_all_patients_ids()
+    all_patients = get_patients(current_patients_ids)
+    return all_patients

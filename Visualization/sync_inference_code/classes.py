@@ -24,6 +24,7 @@ class Patient:
         self.data_path = None
         self.reference_dicom_dir_paths = []
         self.save = True
+        self.short_id = self.info.get('MainDicomTags', {}).get('PatientID')
         self.crop_inverted = False
         self.series = []
         self.get_all_series()
@@ -73,7 +74,10 @@ class Patient:
             self.reference_dicom_dir_paths.append(
                 (series.mode, reference_dicom_dir_path)
             )
-            subject_dict[series.mode] = tio.ScalarImage(reference_dicom_dir_path)
+            if 'segmentation' in series.mode:
+                subject_dict[series.mode] = tio.LabelMap(reference_dicom_dir_path)
+            else:
+                subject_dict[series.mode] = tio.ScalarImage(reference_dicom_dir_path)
         self.subject = tio.Subject(**subject_dict)
         return self.subject
 
@@ -168,10 +172,11 @@ class Patient:
             )
             series.save(series_path)
 
-    def download_and_preprocess(self):
+    def download_and_preprocess(self, include_seg=False):
         self.subject = self.load_subject()
         max_dimensions = self.find_max_dimensions(self.subject)
-        self.subject = self.apply_transformations(self.subject, max_dimensions)
+        if not include_seg:
+            self.subject = self.apply_transformations(self.subject, max_dimensions)
         self.save_transformed_subject(self.subject)
 
     def get_dicom_reference(self, series):
@@ -377,6 +382,8 @@ class Series:
         self.mode = self.get_familiar_mode(
             self.info["MainDicomTags"]["SeriesDescription"]
         )
+        if self.mode == 'segmentation':
+            self.mode = self.mode + '_' + str(uuid.uuid4())
         self.dir = None
 
     def get_series_info(self):
