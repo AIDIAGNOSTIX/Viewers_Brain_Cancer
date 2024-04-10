@@ -10,6 +10,8 @@ from utils.utils import get_models_dict, get_models_paths, save_new_patients, li
 from time import time as ctime
 import numpy as np
 import torch
+import torchio as tio
+
 
 def get_voxel_volume(patient):
     subject = patient.subject
@@ -30,6 +32,26 @@ def get_avg_tumor_volume(patient, voxel_volume):
             total_tumor_volume += tumor_volume
     avg_tumor_volume = total_tumor_volume / len(segs_tumor_volume)
     return avg_tumor_volume, segs_tumor_volume
+
+def load_subject(subject_dir):
+        """
+        Load DICOM images into a TorchIO Subject.
+
+        Parameters:
+        - subject_dir: Path to the directory containing.
+
+        Returns:
+        - A TorchIO Subject containing all the loaded images.
+        """
+        subject_dict  = {}
+        for modality_file in os.listdir(subject_dir):
+            modality = os.path.splitext(modality_file)[0].split('_')[-1]
+            if 'seg' in modality:
+                subject_dict[modality] = tio.LabelMap(os.path.join(subject_dir, modality_file))
+            else:
+                subject_dict[modality] = tio.ScalarImage(os.path.join(subject_dir, modality_file))
+        subject = tio.Subject(**subject_dict)
+        return subject
 
 def main():
     patients = list_all_patients()

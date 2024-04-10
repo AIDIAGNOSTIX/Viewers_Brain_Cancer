@@ -286,9 +286,9 @@ class Patient:
 
                 # Assign labels to the segmentation
                 seg_out[final_seg_prob[1] == 1] = 2  # Whole tumor
-                seg_out[final_seg_prob[2] == 1] = 3  # Enhancing tumor
+                seg_out[final_seg_prob[2] == 1] = 4  # Enhancing tumor
                 seg_out[final_seg_prob[0] == 1] = 1  # Tumor core
-                self.final_segmentation_results[current_mode] = seg_out.copy().astype(np.uint8)
+                self.final_segmentation_results[current_mode] = seg_out.copy()#.astype(np.uint8)
     def get_segmentation_result_per_mode(self, mode):
         if self.crop_inverted==False:
             subject_seg_dict  = {}
