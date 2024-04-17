@@ -34,6 +34,7 @@ window.config = {
         dicomUploadEnabled: true,
         bulkDataURI: {
           enabled: true,
+          relativeResolution: 'series'
         },
       },
     },
