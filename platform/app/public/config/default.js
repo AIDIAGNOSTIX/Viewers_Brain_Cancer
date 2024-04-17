@@ -1,6 +1,23 @@
 window.config = {
   routerBasename: '/',
-  // whiteLabeling: {},
+  whiteLabeling: {
+    createLogoComponentFn: function(React) {
+      return React.createElement('a', {
+        target: '_self',
+        rel: 'noopener noreferrer',
+        className: 'header-brand',
+        href: '/',
+        style: {
+          display: 'block',
+          textIndent: '-9999px',
+          background: 'url(../assets/aidiagnostix_logo.png)',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          width: '200px',
+        },
+      });
+    },
+  },
   extensions: [],
   modes: [],
   customizationService: {},

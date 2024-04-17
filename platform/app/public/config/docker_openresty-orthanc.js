@@ -1,5 +1,23 @@
 window.config = {
   routerBasename: '/',
+  whiteLabeling: {
+    createLogoComponentFn: function(React) {
+      return React.createElement('a', {
+        target: '_self',
+        rel: 'noopener noreferrer',
+        className: 'header-brand',
+        href: '/',
+        style: {
+          display: 'block',
+          textIndent: '-9999px',
+          background: 'url(../assets/aidiagnostix_logo.png)',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          width: '200px',
+        },
+      });
+    },
+  },
   showStudyList: true,
   extensions: [],
   modes: [],
@@ -15,6 +33,7 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb',
       configuration: {
+        dicomUploadEnabled: true,
         friendlyName: 'Orthanc Server',
         name: 'Orthanc',
         wadoUriRoot: 'http://127.0.0.1/pacs/dicom-web',
