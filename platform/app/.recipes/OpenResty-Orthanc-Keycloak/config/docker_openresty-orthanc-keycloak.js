@@ -10,12 +10,15 @@ window.config = {
   showLoadingIndicator: true,
   strictZSpacingForVolumeViewport: true,
   defaultDataSourceName: 'dicomweb',
+  customizationService: {
+    dicomUploadComponent:
+      '@ohif/extension-cornerstone.customizationModule.cornerstoneDicomUploadComponent',
+  },
   dataSources: [
     {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb',
       configuration: {
-        dicomUploadEnabled: true,
         friendlyName: 'Orthanc-Keycloak Server conf2',
         name: 'Orthanc-Keycloak',
         wadoUriRoot: 'http://127.0.0.1/pacs/dicom-web',

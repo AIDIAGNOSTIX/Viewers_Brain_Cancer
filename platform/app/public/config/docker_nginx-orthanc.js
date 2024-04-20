@@ -1,7 +1,7 @@
 window.config = {
   routerBasename: '/',
   whiteLabeling: {
-    createLogoComponentFn: function(React) {
+    createLogoComponentFn: function (React) {
       return React.createElement('a', {
         target: '_self',
         rel: 'noopener noreferrer',
@@ -20,6 +20,10 @@ window.config = {
   },
   showStudyList: true,
   extensions: [],
+  customizationService: {
+    dicomUploadComponent:
+      '@ohif/extension-cornerstone.customizationModule.cornerstoneDicomUploadComponent',
+  },
   modes: [],
   // below flag is for performance reasons, but it might not work for all servers
   showWarningMessageForCrossOrigin: true,
@@ -32,6 +36,7 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb',
       configuration: {
+        dicomUploadEnabled: true,
         friendlyName: 'Orthanc Server',
         name: 'Orthanc',
         wadoUriRoot: '/wado',
@@ -41,7 +46,6 @@ window.config = {
         imageRendering: 'wadors',
         thumbnailRendering: 'wadors',
         omitQuotationForMultipartRequest: true,
-        dicomUploadEnabled: true,
       },
     },
     {

@@ -1,7 +1,11 @@
 window.config = {
+  customizationService: {
+    dicomUploadComponent:
+      '@ohif/extension-cornerstone.customizationModule.cornerstoneDicomUploadComponent',
+  },
   routerBasename: '/',
   whiteLabeling: {
-    createLogoComponentFn: function(React) {
+    createLogoComponentFn: function (React) {
       return React.createElement('a', {
         target: '_self',
         rel: 'noopener noreferrer',
@@ -33,7 +37,6 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb',
       configuration: {
-        dicomUploadEnabled: true,
         friendlyName: 'Orthanc Server',
         name: 'Orthanc',
         wadoUriRoot: 'http://127.0.0.1/pacs/dicom-web',
