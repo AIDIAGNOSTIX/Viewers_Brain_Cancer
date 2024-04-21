@@ -384,6 +384,25 @@ function WorkList({
                 )
               );
             })}
+            <Link
+              className="ml-auto"
+              target="_blank"
+              // to={`${dataPath ? '../../' : ''}${mode.routeName}${
+              //   dataPath || ''
+              // }?${query.toString()}`}
+              to={`/report?studesInstanceUIDs=${studyInstanceUid}`}
+              // to={`${mode.routeName}/dicomweb?StudyInstanceUIDs=${studyInstanceUid}`}
+            >
+              {/* TODO revisit the completely rounded style of buttons used for launching a mode from the worklist later - for now use LegacyButton*/}
+              <LegacyButton
+                rounded="full"
+                variant={'contained'}
+                endIcon={<Icon name="launch-arrow" />} // launch-arrow | launch-info
+                onClick={() => {}}
+              >
+                {'Download Report'}
+              </LegacyButton>
+            </Link>
           </div>
         </StudyListExpandedRow>
       ),
