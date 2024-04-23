@@ -9,6 +9,10 @@ window.config = {
   showLoadingIndicator: true,
   strictZSpacingForVolumeViewport: true,
   defaultDataSourceName: 'dicomweb',
+  customizationService: {
+    dicomUploadComponent:
+      '@ohif/extension-cornerstone.customizationModule.cornerstoneDicomUploadComponent',
+  },
   dataSources: [
     {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
