@@ -66,7 +66,7 @@ const Tooltip = ({ content, isSticky, position, className, tight, children, isDi
       >
         <div
           className={classnames(
-            'tooltip-box bg-primary-dark border-secondary-light w-max-content relative inset-x-auto top-full rounded border text-base text-white',
+            'tooltip-box bg-main-light border-secondary-light w-max-content relative inset-x-auto top-full rounded border text-base text-white',
             {
               'py-1 px-4': !tight,
             }
@@ -74,7 +74,7 @@ const Tooltip = ({ content, isSticky, position, className, tight, children, isDi
         >
           {typeof content === 'string' ? t(content) : content}
           <svg
-            className="text-primary-dark stroke-secondary-light absolute h-4"
+            className="text-main-light stroke-secondary-light absolute h-4"
             style={arrowPositionStyle[position]}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

@@ -176,6 +176,10 @@ module.exports = {
         800: '#97266d',
         900: '#702459',
       },
+      main: '#0f1114',
+      'main-light': '#151a1f',
+      'secondary-main': '#2c363f',
+      'inputfield-main': '#0d8dd0',
     },
     spacing: {
       px: '1px',

@@ -13,7 +13,7 @@ const StudyListTableRow = props => {
       <tr className="select-none">
         <td
           className={classnames('border-0 p-0', {
-            'border-secondary-light bg-primary-dark border-b': isExpanded,
+            'border-secondary-light bg-main-light border-b': isExpanded,
           })}
         >
           <div
@@ -34,9 +34,9 @@ const StudyListTableRow = props => {
                   className={classnames(
                     'hover:bg-secondary-main cursor-pointer transition duration-300',
                     {
-                      'bg-primary-dark': !isExpanded,
+                      'bg-main-light': !isExpanded,
                     },
-                    { 'bg-secondary-dark': isExpanded }
+                    { 'bg-main': isExpanded }
                   )}
                   onClick={onClickRow}
                 >

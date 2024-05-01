@@ -76,6 +76,10 @@ module.exports = {
         100: '#c4fdff',
         200: '#38daff',
       },
+      main: '#0f1114',
+      'main-light': '#151a1f',
+      'secondary-main': '#2c363f',
+      'input-main': '#0d8dd0',
     },
   },
 };

@@ -171,7 +171,7 @@ const SidePanel = ({ side, className, activeTabIndex: activeTabIndexProp, tabs, 
       <>
         <div
           className={classnames(
-            'bg-secondary-dark flex h-[28px] w-full cursor-pointer items-center rounded-md',
+            'bg-main flex h-[28px] w-full cursor-pointer items-center rounded-md',
             side === 'left' ? 'justify-end pr-2' : 'justify-start pl-2'
           )}
           onClick={() => {
@@ -246,7 +246,7 @@ const SidePanel = ({ side, className, activeTabIndex: activeTabIndexProp, tabs, 
     return (
       <div className={classnames('flex grow ', side === 'right' ? 'justify-start' : 'justify-end')}>
         <div
-          className={classnames('bg-primary-dark text-primary-active flex flex-wrap')}
+          className={classnames('bg-main-light text-primary-active flex flex-wrap')}
           style={getGridStyle(side, tabs.length)}
         >
           {tabs.map((tab, tabIndex) => {
@@ -259,7 +259,7 @@ const SidePanel = ({ side, className, activeTabIndex: activeTabIndexProp, tabs, 
                       tabSpacerWidth
                     )}
                   >
-                    <div className="bg-primary-dark h-[20px] w-full"></div>
+                    <div className="bg-main-light h-[20px] w-full"></div>
                   </div>
                 )}
                 <Tooltip
@@ -312,7 +312,7 @@ const SidePanel = ({ side, className, activeTabIndex: activeTabIndexProp, tabs, 
 
   const getOpenStateComponent = () => {
     return (
-      <div className="bg-primary-dark flex rounded-t pt-1.5 pb-[2px]">
+      <div className="bg-main-light flex rounded-t pt-1.5 pb-[2px]">
         {getCloseIcon()}
         {tabs.length === 1 ? getOneTabComponent() : getTabGridComponent()}
       </div>

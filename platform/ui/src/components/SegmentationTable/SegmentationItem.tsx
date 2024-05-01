@@ -48,7 +48,7 @@ const SegmentationItem = ({
           'flex h-auto w-6 items-center justify-center text-center text-base transition duration-300',
           {
             'bg-primary-light text-black': isActive,
-            'bg-primary-dark text-primary-light group-hover:bg-secondary-main': !isActive,
+            'bg-main-light text-primary-light group-hover:bg-secondary-main': !isActive,
           }
         )}
       >
@@ -57,7 +57,7 @@ const SegmentationItem = ({
             name="close"
             className={classnames('w-[10px] text-center transition duration-500 hover:opacity-80', {
               'bg-primary-light text-black': isActive,
-              'bg-primary-dark text-primary-light group-hover:bg-secondary-main': !isActive,
+              'bg-main-light text-primary-light group-hover:bg-secondary-main': !isActive,
             })}
             onClick={e => {
               e.stopPropagation();

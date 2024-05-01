@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Typography from '../Typography';
 
 const Body = ({ text, className }) => {
-  const theme = 'bg-primary-dark';
+  const theme = 'bg-main-light';
   return (
     <div className={classNames('relative flex-auto', theme, className)}>
       <Typography

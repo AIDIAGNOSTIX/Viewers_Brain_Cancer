@@ -17,7 +17,7 @@ const AdvancedToolbox = ({ title, items }) => {
   return (
     <PanelSection title={title}>
       <div className="flex flex-col bg-black">
-        <div className="bg-primary-dark mt-0.5 flex flex-wrap py-2">
+        <div className="bg-main-light mt-0.5 flex flex-wrap py-2">
           {items?.map(item => {
             return (
               <Tooltip
@@ -51,7 +51,7 @@ const AdvancedToolbox = ({ title, items }) => {
             );
           })}
         </div>
-        <div className="bg-primary-dark h-auto px-2">
+        <div className="bg-main-light h-auto px-2">
           <ToolSettings options={activeItemOptions} />
         </div>
       </div>

@@ -18,10 +18,7 @@ const StudyItem = ({
 }) => {
   return (
     <div
-      className={classnames(
-        isActive ? 'bg-secondary-dark' : 'hover:bg-secondary-main bg-black',
-        baseClasses
-      )}
+      className={classnames(isActive ? 'bg-main' : 'hover:bg-secondary-main bg-black', baseClasses)}
       onClick={onClick}
       onKeyDown={onClick}
       role="button"

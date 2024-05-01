@@ -140,7 +140,7 @@ export default function PanelPetSUV({ servicesManager, commandsManager }) {
     <div className="invisible-scrollbar overflow-y-auto overflow-x-hidden">
       {
         <div className="flex flex-col">
-          <div className="bg-primary-dark flex flex-col space-y-4 p-4">
+          <div className="bg-main-light flex flex-col space-y-4 p-4">
             <Input
               label={t('Patient Sex')}
               labelClassName="text-white mb-2"

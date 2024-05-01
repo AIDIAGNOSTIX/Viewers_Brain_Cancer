@@ -451,7 +451,7 @@ function _mapDisplaySets(
               contentProps: {
                 title: 'Delete Report',
                 body: () => (
-                  <div className="bg-primary-dark p-4 text-white">
+                  <div className="bg-main-light p-4 text-white">
                     <p>Are you sure you want to delete this report?</p>
                     <p className="mt-2">This action cannot be undone.</p>
                   </div>

@@ -23,13 +23,13 @@ const ToolbarButton = ({
   const classes = {
     tool: isActive
       ? 'text-black'
-      : 'text-common-bright hover:!bg-primary-dark hover:text-primary-light',
+      : 'text-common-bright hover:!bg-main-light hover:text-primary-light',
     toggle: isActive
       ? '!text-[#348CFD]'
-      : 'text-common-bright hover:!bg-primary-dark hover:text-primary-light',
+      : 'text-common-bright hover:!bg-main-light hover:text-primary-light',
     action: isActive
       ? 'text-black'
-      : 'text-common-bright hover:!bg-primary-dark hover:text-primary-light',
+      : 'text-common-bright hover:!bg-main-light hover:text-primary-light',
   };
 
   const bgClasses = {

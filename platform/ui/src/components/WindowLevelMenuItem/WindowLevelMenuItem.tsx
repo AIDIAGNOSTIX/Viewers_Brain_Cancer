@@ -6,8 +6,8 @@ const WindowLevelMenuItem = ({ title, subtitle, isSelected, index }) => (
   <>
     <div
       className={classNames(
-        'hover:bg-primary-dark flex h-8 w-full flex-row items-center p-3',
-        isSelected && 'bg-primary-dark'
+        'hover:bg-main-light flex h-8 w-full flex-row items-center p-3',
+        isSelected && 'bg-main-light'
       )}
     >
       <span className="text-common-bright mr-2 whitespace-nowrap text-base">{title}</span>
