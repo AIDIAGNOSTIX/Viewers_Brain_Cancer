@@ -48,3 +48,4 @@ platform/app/.recipes/OpenResty-Orthanc/logs/*
 orthanc_up.log.save
 orthanc_up.log
 *.log
+.nx/**

@@ -390,7 +390,7 @@ function WorkList({
               // to={`${dataPath ? '../../' : ''}${mode.routeName}${
               //   dataPath || ''
               // }?${query.toString()}`}
-              to={`https://74.235.230.67:3001/report?studyInstanceUIDs=${studyInstanceUid}`}
+              to={`https://172.191.76.47:3001/report?studyInstanceUIDs=${studyInstanceUid}`}
               // to={`${mode.routeName}/dicomweb?StudyInstanceUIDs=${studyInstanceUid}`}
             >
               {/* TODO revisit the completely rounded style of buttons used for launching a mode from the worklist later - for now use LegacyButton*/}

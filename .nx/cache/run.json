@@ -1,8 +1,8 @@
 {
   "run": {
     "command": "lerna run dev:orthanc --stream",
-    "startTime": "2024-05-08T15:13:24.023Z",
-    "endTime": "2024-05-08T15:30:00.260Z",
+    "startTime": "2024-05-13T17:44:17.534Z",
+    "endTime": "2024-05-17T02:56:40.780Z",
     "inner": false
   },
   "tasks": []
