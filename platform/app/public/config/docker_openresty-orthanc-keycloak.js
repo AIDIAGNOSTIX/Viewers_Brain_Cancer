@@ -39,16 +39,22 @@ window.config = {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
       sourceName: 'dicomweb',
       configuration: {
-        dicomUploadEnabled: true,
-        friendlyName: 'Orthanc Server',
-        name: 'Orthanc',
-        wadoUriRoot: '/wado',
-        qidoRoot: '/dicom-web',
-        wadoRoot: '/dicom-web',
-        qidoSupportsIncludeField: false,
+        friendlyName: 'Orthanc-Keycloak Server',
+        name: 'Orthanc-Keycloak',
+        wadoUriRoot: 'http://127.0.0.1/pacs/dicom-web',
+        qidoRoot: 'http://127.0.0.1/pacs/dicom-web',
+        wadoRoot: 'http://127.0.0.1/pacs/dicom-web',
+        qidoSupportsIncludeField: true,
+        supportsReject: true,
         imageRendering: 'wadors',
         thumbnailRendering: 'wadors',
-        omitQuotationForMultipartRequest: true,
+        enableStudyLazyLoad: true,
+        supportsFuzzyMatching: true,
+        supportsWildcard: true,
+        dicomUploadEnabled: true,
+        bulkDataURI: {
+          enabled: true,
+        },
       },
     },
     {
@@ -65,6 +71,21 @@ window.config = {
       configuration: {
         friendlyName: 'dicom local',
       },
+    },
+  ],
+  oidc: [
+    {
+      // ~ REQUIRED
+      // Authorization Server URL
+      authority: 'http://127.0.0.1/auth/realms/ohif',
+      client_id: 'ohif-viewer',
+      redirect_uri: 'http://127.0.0.1/callback', // `OHIFStandaloneViewer.js`
+      // "Authorization Code Flow"
+      // Resource: https://medium.com/@darutk/diagrams-of-all-the-openid-connect-flows-6968e3990660
+      response_type: 'code',
+      scope: 'openid', // email profile openid
+      // ~ OPTIONAL
+      post_logout_redirect_uri: '/logout-redirect.html',
     },
   ],
 };
