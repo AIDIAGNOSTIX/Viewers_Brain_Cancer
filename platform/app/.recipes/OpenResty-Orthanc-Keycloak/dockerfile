@@ -48,6 +48,9 @@ RUN yarn run build
 # LINK: https://hub.docker.com/r/openresty/openresty
 FROM openresty/openresty:1.21.4.2-0-bullseye-fat
 
+COPY ./platform/app/.recipes/OpenResty-Orthanc-Keycloak/nginx-selfsigned.crt /etc/cert/certificate.crt
+COPY ./platform/app/.recipes/OpenResty-Orthanc-Keycloak/nginx-selfsigned.key /etc/cert/key.pem
+
 RUN mkdir /var/log/nginx
 RUN apt-get update && \
   apt-get install -y openssl libssl-dev git gcc wget unzip make&& \
