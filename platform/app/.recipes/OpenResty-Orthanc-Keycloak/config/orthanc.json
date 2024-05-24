@@ -1,5 +1,5 @@
 {
-  "Name": "Orthanc-Keycloak Database",
+  "Name": "Orthanc inside Docker",
   "StorageDirectory": "/var/lib/orthanc/db",
   "IndexDirectory": "/var/lib/orthanc/db",
   "StorageCompression": false,

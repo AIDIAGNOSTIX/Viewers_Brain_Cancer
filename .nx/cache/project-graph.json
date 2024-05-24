@@ -52,13 +52,13 @@
         "tags": []
       }
     },
-    "@ohif/extension-cornerstone-dicom-rt": {
-      "name": "@ohif/extension-cornerstone-dicom-rt",
+    "@ohif/extension-measurement-tracking": {
+      "name": "@ohif/extension-measurement-tracking",
       "type": "lib",
       "data": {
-        "root": "extensions/cornerstone-dicom-rt",
-        "sourceRoot": "extensions/cornerstone-dicom-rt",
-        "name": "@ohif/extension-cornerstone-dicom-rt",
+        "root": "extensions/measurement-tracking",
+        "sourceRoot": "extensions/measurement-tracking",
+        "name": "@ohif/extension-measurement-tracking",
         "projectType": "library",
         "targets": {
           "dev": {
@@ -68,10 +68,10 @@
             },
             "configurations": {}
           },
-          "dev:dicom-seg": {
+          "dev:dicom-pdf": {
             "executor": "nx:run-script",
             "options": {
-              "script": "dev:dicom-seg"
+              "script": "dev:dicom-pdf"
             },
             "configurations": {}
           },
@@ -176,13 +176,13 @@
         "tags": []
       }
     },
-    "@ohif/extension-measurement-tracking": {
-      "name": "@ohif/extension-measurement-tracking",
+    "@ohif/extension-cornerstone-dicom-rt": {
+      "name": "@ohif/extension-cornerstone-dicom-rt",
       "type": "lib",
       "data": {
-        "root": "extensions/measurement-tracking",
-        "sourceRoot": "extensions/measurement-tracking",
-        "name": "@ohif/extension-measurement-tracking",
+        "root": "extensions/cornerstone-dicom-rt",
+        "sourceRoot": "extensions/cornerstone-dicom-rt",
+        "name": "@ohif/extension-cornerstone-dicom-rt",
         "projectType": "library",
         "targets": {
           "dev": {
@@ -192,10 +192,10 @@
             },
             "configurations": {}
           },
-          "dev:dicom-pdf": {
+          "dev:dicom-seg": {
             "executor": "nx:run-script",
             "options": {
-              "script": "dev:dicom-pdf"
+              "script": "dev:dicom-seg"
             },
             "configurations": {}
           },
@@ -345,6 +345,58 @@
         "tags": []
       }
     },
+    "@ohif/extension-cornerstone": {
+      "name": "@ohif/extension-cornerstone",
+      "type": "lib",
+      "data": {
+        "root": "extensions/cornerstone",
+        "sourceRoot": "extensions/cornerstone",
+        "name": "@ohif/extension-cornerstone",
+        "projectType": "library",
+        "targets": {
+          "dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev"
+            },
+            "configurations": {}
+          },
+          "dev:cornerstone": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev:cornerstone"
+            },
+            "configurations": {}
+          },
+          "build": {
+            "outputs": [
+              "{projectRoot}/platform/app/dist"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build"
+            },
+            "configurations": {}
+          },
+          "build:package-1": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build:package-1"
+            },
+            "configurations": {}
+          },
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "configurations": {}
+          }
+        },
+        "implicitDependencies": [],
+        "tags": []
+      }
+    },
     "@ohif/extension-dicom-video": {
       "name": "@ohif/extension-dicom-video",
       "type": "lib",
@@ -410,13 +462,13 @@
         "tags": []
       }
     },
-    "@ohif/extension-cornerstone": {
-      "name": "@ohif/extension-cornerstone",
+    "@ohif/mode-test": {
+      "name": "@ohif/mode-test",
       "type": "lib",
       "data": {
-        "root": "extensions/cornerstone",
-        "sourceRoot": "extensions/cornerstone",
-        "name": "@ohif/extension-cornerstone",
+        "root": "modes/basic-test-mode",
+        "sourceRoot": "modes/basic-test-mode",
+        "name": "@ohif/mode-test",
         "projectType": "library",
         "targets": {
           "dev": {
@@ -443,10 +495,10 @@
             },
             "configurations": {}
           },
-          "build:package-1": {
+          "build:package": {
             "executor": "nx:run-script",
             "options": {
-              "script": "build:package-1"
+              "script": "build:package"
             },
             "configurations": {}
           },
@@ -456,19 +508,39 @@
               "script": "start"
             },
             "configurations": {}
+          },
+          "test:unit": {
+            "dependsOn": [
+              "^test:unit"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:unit"
+            },
+            "configurations": {}
+          },
+          "test:unit:ci": {
+            "dependsOn": [
+              "^test:unit:ci"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:unit:ci"
+            },
+            "configurations": {}
           }
         },
         "implicitDependencies": [],
         "tags": []
       }
     },
-    "@ohif/mode-test": {
-      "name": "@ohif/mode-test",
+    "@ohif/mode-basic-dev-mode": {
+      "name": "@ohif/mode-basic-dev-mode",
       "type": "lib",
       "data": {
-        "root": "modes/basic-test-mode",
-        "sourceRoot": "modes/basic-test-mode",
-        "name": "@ohif/mode-test",
+        "root": "modes/basic-dev-mode",
+        "sourceRoot": "modes/basic-dev-mode",
+        "name": "@ohif/mode-basic-dev-mode",
         "projectType": "library",
         "targets": {
           "dev": {
@@ -599,13 +671,85 @@
         "tags": []
       }
     },
-    "@ohif/mode-basic-dev-mode": {
-      "name": "@ohif/mode-basic-dev-mode",
+    "@ohif/mode-longitudinal": {
+      "name": "@ohif/mode-longitudinal",
       "type": "lib",
       "data": {
-        "root": "modes/basic-dev-mode",
-        "sourceRoot": "modes/basic-dev-mode",
-        "name": "@ohif/mode-basic-dev-mode",
+        "root": "modes/longitudinal",
+        "sourceRoot": "modes/longitudinal",
+        "name": "@ohif/mode-longitudinal",
+        "projectType": "library",
+        "targets": {
+          "dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev"
+            },
+            "configurations": {}
+          },
+          "dev:cornerstone": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev:cornerstone"
+            },
+            "configurations": {}
+          },
+          "build": {
+            "outputs": [
+              "{projectRoot}/platform/app/dist"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build"
+            },
+            "configurations": {}
+          },
+          "build:package": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build:package"
+            },
+            "configurations": {}
+          },
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "configurations": {}
+          },
+          "test:unit": {
+            "dependsOn": [
+              "^test:unit"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:unit"
+            },
+            "configurations": {}
+          },
+          "test:unit:ci": {
+            "dependsOn": [
+              "^test:unit:ci"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:unit:ci"
+            },
+            "configurations": {}
+          }
+        },
+        "implicitDependencies": [],
+        "tags": []
+      }
+    },
+    "@ohif/mode-segmentation": {
+      "name": "@ohif/mode-segmentation",
+      "type": "lib",
+      "data": {
+        "root": "modes/segmentation",
+        "sourceRoot": "modes/segmentation",
+        "name": "@ohif/mode-segmentation",
         "projectType": "library",
         "targets": {
           "dev": {
@@ -715,150 +859,6 @@
             "executor": "nx:run-script",
             "options": {
               "script": "start"
-            },
-            "configurations": {}
-          }
-        },
-        "implicitDependencies": [],
-        "tags": []
-      }
-    },
-    "@ohif/mode-segmentation": {
-      "name": "@ohif/mode-segmentation",
-      "type": "lib",
-      "data": {
-        "root": "modes/segmentation",
-        "sourceRoot": "modes/segmentation",
-        "name": "@ohif/mode-segmentation",
-        "projectType": "library",
-        "targets": {
-          "dev": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "dev"
-            },
-            "configurations": {}
-          },
-          "dev:cornerstone": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "dev:cornerstone"
-            },
-            "configurations": {}
-          },
-          "build": {
-            "outputs": [
-              "{projectRoot}/platform/app/dist"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "build"
-            },
-            "configurations": {}
-          },
-          "build:package": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "build:package"
-            },
-            "configurations": {}
-          },
-          "start": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "start"
-            },
-            "configurations": {}
-          },
-          "test:unit": {
-            "dependsOn": [
-              "^test:unit"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "test:unit"
-            },
-            "configurations": {}
-          },
-          "test:unit:ci": {
-            "dependsOn": [
-              "^test:unit:ci"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "test:unit:ci"
-            },
-            "configurations": {}
-          }
-        },
-        "implicitDependencies": [],
-        "tags": []
-      }
-    },
-    "@ohif/mode-longitudinal": {
-      "name": "@ohif/mode-longitudinal",
-      "type": "lib",
-      "data": {
-        "root": "modes/longitudinal",
-        "sourceRoot": "modes/longitudinal",
-        "name": "@ohif/mode-longitudinal",
-        "projectType": "library",
-        "targets": {
-          "dev": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "dev"
-            },
-            "configurations": {}
-          },
-          "dev:cornerstone": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "dev:cornerstone"
-            },
-            "configurations": {}
-          },
-          "build": {
-            "outputs": [
-              "{projectRoot}/platform/app/dist"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "build"
-            },
-            "configurations": {}
-          },
-          "build:package": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "build:package"
-            },
-            "configurations": {}
-          },
-          "start": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "start"
-            },
-            "configurations": {}
-          },
-          "test:unit": {
-            "dependsOn": [
-              "^test:unit"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "test:unit"
-            },
-            "configurations": {}
-          },
-          "test:unit:ci": {
-            "dependsOn": [
-              "^test:unit:ci"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "test:unit:ci"
             },
             "configurations": {}
           }
@@ -1004,6 +1004,78 @@
         "tags": []
       }
     },
+    "@ohif/i18n": {
+      "name": "@ohif/i18n",
+      "type": "lib",
+      "data": {
+        "root": "platform/i18n",
+        "sourceRoot": "platform/i18n",
+        "name": "@ohif/i18n",
+        "projectType": "library",
+        "targets": {
+          "dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev"
+            },
+            "configurations": {}
+          },
+          "dev:i18n": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev:i18n"
+            },
+            "configurations": {}
+          },
+          "build": {
+            "outputs": [
+              "{projectRoot}/platform/app/dist"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build"
+            },
+            "configurations": {}
+          },
+          "build:package": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build:package"
+            },
+            "configurations": {}
+          },
+          "pullTranslations": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "pullTranslations"
+            },
+            "configurations": {}
+          },
+          "test:unit": {
+            "dependsOn": [
+              "^test:unit"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:unit"
+            },
+            "configurations": {}
+          },
+          "test:unit:ci": {
+            "dependsOn": [
+              "^test:unit:ci"
+            ],
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:unit:ci"
+            },
+            "configurations": {}
+          }
+        },
+        "implicitDependencies": [],
+        "tags": []
+      }
+    },
     "ohif-docs": {
       "name": "ohif-docs",
       "type": "lib",
@@ -1090,78 +1162,6 @@
             "executor": "nx:run-script",
             "options": {
               "script": "write-heading-ids"
-            },
-            "configurations": {}
-          }
-        },
-        "implicitDependencies": [],
-        "tags": []
-      }
-    },
-    "@ohif/i18n": {
-      "name": "@ohif/i18n",
-      "type": "lib",
-      "data": {
-        "root": "platform/i18n",
-        "sourceRoot": "platform/i18n",
-        "name": "@ohif/i18n",
-        "projectType": "library",
-        "targets": {
-          "dev": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "dev"
-            },
-            "configurations": {}
-          },
-          "dev:i18n": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "dev:i18n"
-            },
-            "configurations": {}
-          },
-          "build": {
-            "outputs": [
-              "{projectRoot}/platform/app/dist"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "build"
-            },
-            "configurations": {}
-          },
-          "build:package": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "build:package"
-            },
-            "configurations": {}
-          },
-          "pullTranslations": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "pullTranslations"
-            },
-            "configurations": {}
-          },
-          "test:unit": {
-            "dependsOn": [
-              "^test:unit"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "test:unit"
-            },
-            "configurations": {}
-          },
-          "test:unit:ci": {
-            "dependsOn": [
-              "^test:unit:ci"
-            ],
-            "executor": "nx:run-script",
-            "options": {
-              "script": "test:unit:ci"
             },
             "configurations": {}
           }
@@ -26469,130 +26469,6 @@
         "type": "static"
       }
     ],
-    "@ohif/extension-cornerstone-dicom-rt": [
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "npm:@babel/runtime",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "npm:react-color",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "@ohif/core",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "@ohif/extension-cornerstone",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "@ohif/extension-default",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "@ohif/i18n",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "npm:prop-types",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "npm:react",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "npm:react-dom",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-rt",
-        "target": "npm:react-i18next",
-        "type": "static"
-      }
-    ],
-    "@ohif/extension-cornerstone-dicom-sr": [
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:@babel/runtime",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:@cornerstonejs/adapters",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:@cornerstonejs/core",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:@cornerstonejs/tools",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:classnames",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "@ohif/core",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "@ohif/extension-cornerstone",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "@ohif/extension-measurement-tracking",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "@ohif/ui",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:dcmjs",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:dicom-parser",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:hammerjs",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:prop-types",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-cornerstone-dicom-sr",
-        "target": "npm:react",
-        "type": "static"
-      }
-    ],
     "@ohif/extension-measurement-tracking": [
       {
         "source": "@ohif/extension-measurement-tracking",
@@ -26672,6 +26548,130 @@
       {
         "source": "@ohif/extension-measurement-tracking",
         "target": "npm:webpack-merge",
+        "type": "static"
+      }
+    ],
+    "@ohif/extension-cornerstone-dicom-sr": [
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:@babel/runtime",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:@cornerstonejs/adapters",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:@cornerstonejs/core",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:@cornerstonejs/tools",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:classnames",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "@ohif/core",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "@ohif/extension-cornerstone",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "@ohif/extension-measurement-tracking",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "@ohif/ui",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:dcmjs",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:dicom-parser",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:hammerjs",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:prop-types",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-sr",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "@ohif/extension-cornerstone-dicom-rt": [
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "npm:@babel/runtime",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "npm:react-color",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "@ohif/core",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "@ohif/extension-cornerstone",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "@ohif/extension-default",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "@ohif/i18n",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "npm:prop-types",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-cornerstone-dicom-rt",
+        "target": "npm:react-i18next",
         "type": "static"
       }
     ],
@@ -26795,53 +26795,6 @@
       },
       {
         "source": "@ohif/extension-test",
-        "target": "npm:react",
-        "type": "static"
-      }
-    ],
-    "@ohif/extension-dicom-video": [
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "npm:@babel/runtime",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "npm:classnames",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "@ohif/core",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "@ohif/ui",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "npm:dcmjs",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "npm:dicom-parser",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "npm:hammerjs",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
-        "target": "npm:prop-types",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-video",
         "target": "npm:react",
         "type": "static"
       }
@@ -26978,6 +26931,53 @@
         "type": "static"
       }
     ],
+    "@ohif/extension-dicom-video": [
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "npm:@babel/runtime",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "npm:classnames",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "@ohif/core",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "@ohif/ui",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "npm:dcmjs",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "npm:dicom-parser",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "npm:hammerjs",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "npm:prop-types",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-video",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
     "@ohif/mode-test": [
       {
         "source": "@ohif/mode-test",
@@ -27035,53 +27035,6 @@
         "type": "static"
       }
     ],
-    "@ohif/extension-dicom-pdf": [
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "npm:@babel/runtime",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "npm:classnames",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "@ohif/core",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "@ohif/ui",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "npm:dcmjs",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "npm:dicom-parser",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "npm:hammerjs",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "npm:prop-types",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-dicom-pdf",
-        "target": "npm:react",
-        "type": "static"
-      }
-    ],
     "@ohif/mode-basic-dev-mode": [
       {
         "source": "@ohif/mode-basic-dev-mode",
@@ -27129,70 +27082,112 @@
         "type": "static"
       }
     ],
-    "@ohif/extension-default": [
+    "@ohif/extension-dicom-pdf": [
       {
-        "source": "@ohif/extension-default",
+        "source": "@ohif/extension-dicom-pdf",
         "target": "npm:@babel/runtime",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
-        "target": "npm:@cornerstonejs/calculate-suv",
+        "source": "@ohif/extension-dicom-pdf",
+        "target": "npm:classnames",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
+        "source": "@ohif/extension-dicom-pdf",
         "target": "@ohif/core",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
-        "target": "@ohif/i18n",
+        "source": "@ohif/extension-dicom-pdf",
+        "target": "@ohif/ui",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
+        "source": "@ohif/extension-dicom-pdf",
         "target": "npm:dcmjs",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
-        "target": "npm:dicomweb-client",
+        "source": "@ohif/extension-dicom-pdf",
+        "target": "npm:dicom-parser",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
+        "source": "@ohif/extension-dicom-pdf",
+        "target": "npm:hammerjs",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-dicom-pdf",
         "target": "npm:prop-types",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
+        "source": "@ohif/extension-dicom-pdf",
         "target": "npm:react",
         "type": "static"
-      },
+      }
+    ],
+    "@ohif/mode-longitudinal": [
       {
-        "source": "@ohif/extension-default",
-        "target": "npm:react-dom",
+        "source": "@ohif/mode-longitudinal",
+        "target": "npm:@babel/runtime",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
-        "target": "npm:react-i18next",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-default",
-        "target": "npm:react-window",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/extension-default",
+        "source": "@ohif/mode-longitudinal",
         "target": "npm:webpack",
         "type": "static"
       },
       {
-        "source": "@ohif/extension-default",
+        "source": "@ohif/mode-longitudinal",
         "target": "npm:webpack-merge",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/core",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-cornerstone",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-cornerstone-dicom-rt",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-cornerstone-dicom-seg",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-cornerstone-dicom-sr",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-default",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-dicom-pdf",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-dicom-video",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/mode-longitudinal",
+        "target": "@ohif/extension-measurement-tracking",
         "type": "static"
       }
     ],
@@ -27323,65 +27318,70 @@
         "type": "static"
       }
     ],
-    "@ohif/mode-longitudinal": [
+    "@ohif/extension-default": [
       {
-        "source": "@ohif/mode-longitudinal",
+        "source": "@ohif/extension-default",
         "target": "npm:@babel/runtime",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "npm:webpack",
+        "source": "@ohif/extension-default",
+        "target": "npm:@cornerstonejs/calculate-suv",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "npm:webpack-merge",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/mode-longitudinal",
+        "source": "@ohif/extension-default",
         "target": "@ohif/core",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-cornerstone",
+        "source": "@ohif/extension-default",
+        "target": "@ohif/i18n",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-cornerstone-dicom-rt",
+        "source": "@ohif/extension-default",
+        "target": "npm:dcmjs",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-cornerstone-dicom-seg",
+        "source": "@ohif/extension-default",
+        "target": "npm:dicomweb-client",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-cornerstone-dicom-sr",
+        "source": "@ohif/extension-default",
+        "target": "npm:prop-types",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-default",
+        "source": "@ohif/extension-default",
+        "target": "npm:react",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-dicom-pdf",
+        "source": "@ohif/extension-default",
+        "target": "npm:react-dom",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-dicom-video",
+        "source": "@ohif/extension-default",
+        "target": "npm:react-i18next",
         "type": "static"
       },
       {
-        "source": "@ohif/mode-longitudinal",
-        "target": "@ohif/extension-measurement-tracking",
+        "source": "@ohif/extension-default",
+        "target": "npm:react-window",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-default",
+        "target": "npm:webpack",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/extension-default",
+        "target": "npm:webpack-merge",
         "type": "static"
       }
     ],
@@ -27446,6 +27446,58 @@
       {
         "source": "@ohif/extension-tmtv",
         "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "@ohif/i18n": [
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:@babel/runtime",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:i18next-locize-backend",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:locize-editor",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:locize-lastused",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:i18next",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:i18next-browser-languagedetector",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:react-i18next",
+        "type": "static"
+      },
+      {
+        "source": "@ohif/i18n",
+        "target": "npm:webpack-merge",
         "type": "static"
       }
     ],
@@ -27538,58 +27590,6 @@
       {
         "source": "ohif-docs",
         "target": "npm:react-dom",
-        "type": "static"
-      }
-    ],
-    "@ohif/i18n": [
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:@babel/runtime",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:i18next-locize-backend",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:locize-editor",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:locize-lastused",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:i18next",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:i18next-browser-languagedetector",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:react",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:react-dom",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:react-i18next",
-        "type": "static"
-      },
-      {
-        "source": "@ohif/i18n",
-        "target": "npm:webpack-merge",
         "type": "static"
       }
     ],
