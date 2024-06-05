@@ -36,6 +36,7 @@
     "dev:static": "lerna run dev:static --stream",
     "orthanc:up": "docker-compose -f platform/app/.recipes/OpenResty-Orthanc/docker-compose.yml up",
     "orthanc_keycloak:up": "docker-compose -f platform/app/.recipes/OpenResty-Orthanc-Keycloak/docker-compose.yml up --build",
+    "orthanc_keycloak:up-quick": "docker-compose -f platform/app/.recipes/OpenResty-Orthanc-Keycloak/docker-compose.yml up",
     "preinstall": "node preinstall.js",
     "start": "yarn run dev",
     "test": "yarn run test:unit",

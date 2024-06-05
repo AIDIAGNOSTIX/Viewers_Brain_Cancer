@@ -1,9 +1,21 @@
 {
   "run": {
-    "command": "lerna run dev:orthanc --stream",
-    "startTime": "2024-05-13T17:44:17.534Z",
-    "endTime": "2024-05-17T02:56:40.780Z",
+    "command": "lerna run build:viewer --stream",
+    "startTime": "2024-06-05T01:18:19.388Z",
+    "endTime": "2024-06-05T01:18:19.418Z",
     "inner": false
   },
-  "tasks": []
+  "tasks": [
+    {
+      "taskId": "@ohif/app:build:viewer",
+      "target": "build:viewer",
+      "projectName": "@ohif/app",
+      "hash": "9733480986821183467",
+      "startTime": "2024-06-05T01:18:19.395Z",
+      "endTime": "2024-06-05T01:18:19.415Z",
+      "params": "",
+      "cacheStatus": "local-cache-hit",
+      "status": 0
+    }
+  ]
 }
