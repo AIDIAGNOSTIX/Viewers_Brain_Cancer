@@ -26,6 +26,12 @@ services:
     volumes:
       - ./config/orthanc.json:/etc/orthanc/orthanc.json:ro
       - ./volumes/orthanc-db/:/var/lib/orthanc/db/
+    # environment:
+    #   - ORTHANC__REMOTEACCESSALLOWED=true
+    #   - ORTHANC__HTTPPORT=8042
+    # ports:
+    #   - '8042:8042'
+    #   - '4242:4242'
     restart: unless-stopped
 
   keycloak:
@@ -36,19 +42,22 @@ services:
       - ./volumes/keycloak-themes/ohif:/opt/jboss/keycloak/themes/ohif
       - ./config/ohif-keycloak-realm.json:/tmp/ohif-keycloak-realm.json
     environment:
-      DB_VENDOR: postgres
-      DB_ADDR: postgres
-      DB_PORT: 5432
-      DB_DATABASE: keycloak
-      DB_SCHEMA: public
-      DB_USER: keycloak
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: password
-      KEYCLOAK_IMPORT: /tmp/ohif-keycloak-realm.json
-      PROXY_ADDRESS_FORWARDING: 'true'
+      - DB_VENDOR=postgres
+      - DB_ADDR=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=keycloak
+      - DB_SCHEMA=public
+      - DB_USER=keycloak
+      - DB_PASSWORD=password
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=password
+      - KEYCLOAK_IMPORT=/tmp/ohif-keycloak-realm.json
+      - PROXY_ADDRESS_FORWARDING=true
     depends_on:
       - postgres
+    ports:
+      - '8080:8080'
+      - '8443:8443'
     restart: unless-stopped
 
   postgres:
@@ -58,9 +67,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=password
+    # ports:
+    #   - '5432:5432'
     restart: unless-stopped
 
 volumes:
