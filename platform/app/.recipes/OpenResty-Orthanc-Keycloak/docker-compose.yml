@@ -17,7 +17,16 @@ services:
     depends_on:
       - keycloak
       - orthanc
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1" # Replace 172.17.0.1 with your Docker host IP
     restart: on-failure
+
+  socat:
+    image: alpine/socat
+    container_name: socat
+    command: socat TCP-LISTEN:3001,fork,reuseaddr TCP:172.17.0.1:3001 # Replace 172.17.0.1 with your Docker host IP
+    networks:
+      - default
 
   orthanc:
     image: jodogne/orthanc-plugins
